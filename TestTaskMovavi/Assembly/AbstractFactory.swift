@@ -19,22 +19,12 @@ class AbstractFactory {
 		
 		let imageApiService = ImagesApiService.init()
 		imageApiService.apiService = APIService.shared
-		presenter.listAPIService = imageApiService
-		return view
-	}
-	
-	class func createImageDetailModule(id: Int) -> UIViewController {
-		let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-		let view = storyboard.instantiateViewController(identifier: "ImageDetailViewIdentifier") as! ImageDetailView
-		
-		let presenter = ImageDetailPresenter()
-		view.output = presenter
-		presenter.view = view
-		presenter.imageID = id
-		
-		let detailApiService = ImageDetailApiService.init()
-		detailApiService.apiService = APIService.shared
-		presenter.detailAPIService = detailApiService
+
+		let xmlParserService = XMLParserService.init()
+		xmlParserService.apiService = APIService.shared
+
+		presenter.xmlParserService = xmlParserService
+
 		return view
 	}
 }

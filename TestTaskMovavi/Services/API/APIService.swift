@@ -11,23 +11,22 @@ import UIKit
 class APIService {
 	//values hardcode
 	let APIKey: String = #"17922153-cb6f9085142c570217f7017fe"#
-	let host: String = "http://pixabay.com/api"
-	
+	let host: String = "https://lenta.ru/rss/articles"
 	static var shared: APIService = {
 		let instance = APIService()
 		return instance
 	}()
 	
 	private init() {
-		// Private init because of singleton
+		
 	}
 	
-	func getRequest(path: String, parameters: [String:String], successCallback: @escaping (Data?)  ->(), errorCallback: @escaping (Error)->()) -> () {
+	func getRequest(path: String, successCallback: @escaping (Data?)  ->(), errorCallback: @escaping (Error)->()) -> () {
 		let urlSession = URLSession.shared
-		let inParameters = addAPIKey(parameters: parameters)
-		let parametersString = createQueryParametersString(parameters: inParameters)
+		//let inParameters = addAPIKey(parameters: parameters)
+		//let parametersString = createQueryParametersString(parameters: inParameters)
 		
-		if parametersString != nil, let url = URL(string: host + path + "?" + parametersString!) {
+		if let url = URL(string: host) {
 			var urlRequest = URLRequest.init(url: url)
 			urlRequest.httpMethod = "GET"
 			let dataTask = urlSession.dataTask(with: urlRequest) { [weak self] data, response, error in
@@ -78,4 +77,5 @@ class APIService {
 		return false
 	}
 }
+
 

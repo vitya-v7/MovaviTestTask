@@ -16,8 +16,7 @@ protocol ImagesListViewInput : UIViewController {
 
 protocol ImagesListViewOutput {
 	func viewDidLoadDone()
-	func loadImages(text: String)
-	func cellWithIndexSelected(index: Int)
+	func loadImages()
 }
 
 class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
@@ -33,6 +32,7 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 		self.tableView?.delegate = self
 		self.tableView?.dataSource = self
 		output?.viewDidLoadDone()
+		
 	}
 	
 	func showLoading(show: Bool) {
@@ -57,10 +57,6 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 		return 100
 	}
 	
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		output?.cellWithIndexSelected(index: indexPath.row)
-	}
-	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: ImagesElementCell.reuseIdentifier) as! ImagesElementCell
 		cell.configureCell(withObject: viewModels![indexPath.row])
@@ -78,7 +74,7 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 	//MARK: UISearchBarDelegate
 	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 		if let text = searchBar.text, text != "" {
-			output?.loadImages(text: text)            
+			//output?.loadImages()
 		}
 		searchBar.endEditing(true)
 	}

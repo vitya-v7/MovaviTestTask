@@ -13,6 +13,7 @@ protocol ImagesListApiInterface {
 }
 
 class ImagesApiService: ImagesListApiInterface {
+
 	var apiService: APIService?
 	// values hardcode
 	let path: String = ""
@@ -27,7 +28,7 @@ class ImagesApiService: ImagesListApiInterface {
 	func getImages(text: String, successCallback: @escaping ([ImagesElementModel]) -> (), errorCallback: @escaping (Error) -> ()) {
 		let parameters = ["q": replaceSpacesWithPluses(text: text)]
 		let inParameters = addPerPage(parameters: parameters)
-		apiService!.getRequest(path: path, parameters: inParameters, successCallback: { (data: Data?) in
+		apiService!.getRequest(path: path, successCallback: { (data: Data?) in
 			do {
 				let decoder = JSONDecoder()
 				let pictures: ImagesContainerModel = try decoder.decode(ImagesContainerModel.self, from: data!)
@@ -48,3 +49,4 @@ class ImagesApiService: ImagesListApiInterface {
 		return result.joined(separator: "+")
 	}
 }
+
