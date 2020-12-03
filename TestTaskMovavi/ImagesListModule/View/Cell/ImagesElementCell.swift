@@ -1,6 +1,6 @@
 //
 //  ImagesElementCell.swift
-//  TestTaskSibers
+//  TestTaskMovavi
 //
 //  Created by Viktor D. on 17.08.2020.
 //  Copyright © 2020 Viktor D. All rights reserved.
