@@ -12,24 +12,24 @@ class ImagesListPresenter: ImagesListViewOutput {
 
 	var xmlParserService: XMLParserService?
 	var view: ImagesListViewInput?
-	var imagesCells: [ImagesElementViewModel]?
+	var imagesCells: [Post]?
 
 	init () {}
 
 	func viewDidLoadDone() {
-		loadImages()
+		loadNews()
 		view?.setInitialState()
 	}
 
-	func loadImages() {
+	func loadNews() {
 		self.view!.showLoading(show: true)
-		xmlParserService?.getNews(successCallback: { [weak self] (data:[ImagesElementModel]) -> ()  in
+		xmlParserService?.getNews(successCallback: { [weak self] (data:[Post]) -> ()  in
 			guard let strongSelf = self else {
 				return
 			}
-			strongSelf.imagesCells = [ImagesElementViewModel]()
+			strongSelf.imagesCells = [Post]()
 			for model in data {
-				let viewModel = ImagesElementViewModel.init(withElementModel: model)
+				let viewModel = NewsElementViewModel.init(withElementModel: model)
 				strongSelf.imagesCells?.append(viewModel)
 			}
 

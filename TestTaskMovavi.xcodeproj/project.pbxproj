@@ -21,7 +21,7 @@
 		8494266424E8DEE000B1F680 /* AbstractFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8494266224E8DEDF00B1F680 /* AbstractFactory.swift */; };
 		8494266524E8DEE000B1F680 /* ImagesApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8494266324E8DEDF00B1F680 /* ImagesApiService.swift */; };
 		84B11A1724E9A3740005DA43 /* ImagesElementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B11A1624E9A3740005DA43 /* ImagesElementModel.swift */; };
-		84B11A1924E9A3880005DA43 /* ImagesElementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B11A1824E9A3880005DA43 /* ImagesElementViewModel.swift */; };
+		84B11A1924E9A3880005DA43 /* NewsElementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B11A1824E9A3880005DA43 /* NewsElementViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +41,7 @@
 		8494266224E8DEDF00B1F680 /* AbstractFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbstractFactory.swift; sourceTree = "<group>"; };
 		8494266324E8DEDF00B1F680 /* ImagesApiService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesApiService.swift; sourceTree = "<group>"; };
 		84B11A1624E9A3740005DA43 /* ImagesElementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesElementModel.swift; sourceTree = "<group>"; };
-		84B11A1824E9A3880005DA43 /* ImagesElementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesElementViewModel.swift; sourceTree = "<group>"; };
+		84B11A1824E9A3880005DA43 /* NewsElementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsElementViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +102,7 @@
 		8459CA2824EBF03F00D31B9A /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				84B11A1824E9A3880005DA43 /* ImagesElementViewModel.swift */,
+				84B11A1824E9A3880005DA43 /* NewsElementViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -254,7 +254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8494266424E8DEE000B1F680 /* AbstractFactory.swift in Sources */,
-				84B11A1924E9A3880005DA43 /* ImagesElementViewModel.swift in Sources */,
+				84B11A1924E9A3880005DA43 /* NewsElementViewModel.swift in Sources */,
 				8459CA0F24EA7F7900D31B9A /* ImageLoader.swift in Sources */,
 				840029CC24E970FB005E8966 /* ImagesListView.swift in Sources */,
 				8494266524E8DEE000B1F680 /* ImagesApiService.swift in Sources */,

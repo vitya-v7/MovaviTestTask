@@ -12,9 +12,8 @@ class ImagesElementCell: UITableViewCell {
 	
 	@IBOutlet weak var smallImage: UIImageView!
 	@IBOutlet weak var title: UILabel!
-	@IBOutlet weak var detail: UILabel!
 	
-	var viewModel: ImagesElementViewModel?
+	var viewModel: NewsElementViewModel?
 	static let reuseIdentifier = "ImagesListCellIdentifier"
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -26,11 +25,10 @@ class ImagesElementCell: UITableViewCell {
 		self.smallImage.image = nil
 	}
 	
-	func configureCell(withObject object: ImagesElementViewModel) {
+	func configureCell(withObject object: NewsElementViewModel) {
 		viewModel = object
 		setImageToImageView(urlString: object.imageURL!)
-		self.title!.text = "User: " + object.user!
-		self.detail!.text = "Views: " + String(object.views!)
+		self.title!.text = "Title: " + object.title!
 	}
 	
 	func setImageToImageView(urlString: String) {

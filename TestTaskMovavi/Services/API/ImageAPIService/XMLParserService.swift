@@ -8,12 +8,13 @@
 
 import Foundation
 
+struct Post {
+	public var title: String!
+	public var url: String!
+}
+
 class XMLParserService: NSObject, XMLParserDelegate {
 	
-	struct Post {
-		public var title: String!
-		public var url: String!
-	}
 
 	override init() {
 		super.init()
@@ -28,19 +29,13 @@ class XMLParserService: NSObject, XMLParserDelegate {
 
 	var apiService: APIService? = nil
 	var delegate: XMLParserService?
-	func getNews(successCallback: @escaping ([ImagesElementModel]) -> (), errorCallback: @escaping (Error) -> ()) {
-		apiService!.getRequest(path: APIService.shared.host, successCallback: { (data: Data?) in
-			do {
-				self.parser = XMLParser.init(data: data!)
-				self.parser.delegate = self
-				self.parser.parse()
-				let data2 = data
-				//let pictures: ImagesContainerModel = try decoder.decode(ImagesContainerModel.self, from: data!)
-				//successCallback(pictures.images)
-			}
-			catch {
-				print(error)
-			}
+	func getNews(successCallback: @escaping ([Post]) -> (), errorCallback: @escaping (Error) -> ()) {
+		apiService!.getRequest(path: APIService.shared.host, successCallback: { [weak self] (data: Data?) in
+			guard let strongSelf = self else { return }
+			strongSelf.parser = XMLParser.init(data: data!)
+			strongSelf.parser.delegate = self
+			strongSelf.parser.parse()
+			successCallback(strongSelf.posts)
 		}, errorCallback: errorCallback)
 	}
 

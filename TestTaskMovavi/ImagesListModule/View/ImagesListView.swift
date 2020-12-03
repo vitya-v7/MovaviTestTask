@@ -10,7 +10,7 @@ import UIKit
 
 protocol ImagesListViewInput : UIViewController {
 	func setInitialState()
-	func setViewModel(viewModels: [ImagesElementViewModel])
+	func setViewModel(viewModels: [NewsElementViewModel])
 	func showLoading(show: Bool)
 }
 
@@ -25,7 +25,7 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 	@IBOutlet var tableView: UITableView?
 	var output: ImagesListViewOutput?
 	
-	var viewModels: [ImagesElementViewModel]?
+	var viewModels: [NewsElementViewModel]?
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -44,7 +44,7 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 		}
 	}
 	
-	func setViewModel(viewModels:[ImagesElementViewModel]) {
+	func setViewModel(viewModels:[NewsElementViewModel]) {
 		self.viewModels = viewModels
 		self.tableView?.reloadData()
 	}
