@@ -17,19 +17,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iYn-B4-hGj">
-                                <rect key="frame" x="0.0" y="20" width="320" height="56"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <outlet property="delegate" destination="sJC-k8-5nh" id="L37-Gp-LzD"/>
-                                </connections>
-                            </searchBar>
                             <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="qml-m5-C3g">
                                 <rect key="frame" x="141.5" y="221.5" width="37" height="37"/>
                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lyg-6W-xkr">
-                                <rect key="frame" x="0.0" y="85" width="320" height="395"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImagesListCellIdentifier" rowHeight="200" id="CiN-Ka-Td6" customClass="ImagesElementCell" customModule="TestTaskMovavi" customModuleProvider="target">
@@ -40,13 +33,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kBS-OY-ros">
-                                                    <rect key="frame" x="170" y="5" width="145" height="190"/>
+                                                    <rect key="frame" x="154" y="5" width="161" height="190"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QVa-KA-LTK">
-                                                    <rect key="frame" x="5" y="20" width="160" height="160"/>
+                                                    <rect key="frame" x="5" y="28" width="144" height="144"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="QVa-KA-LTK" secondAttribute="height" multiplier="1:1" id="gcV-Tf-fO7"/>
                                                     </constraints>
@@ -57,7 +50,7 @@
                                                 <constraint firstItem="kBS-OY-ros" firstAttribute="top" secondItem="bYe-cs-Tch" secondAttribute="top" constant="5" id="4vD-iu-wgh"/>
                                                 <constraint firstAttribute="trailing" secondItem="kBS-OY-ros" secondAttribute="trailing" constant="5" id="IJM-fs-4zE"/>
                                                 <constraint firstItem="kBS-OY-ros" firstAttribute="centerY" secondItem="bYe-cs-Tch" secondAttribute="centerY" id="RnF-2l-vdm"/>
-                                                <constraint firstItem="QVa-KA-LTK" firstAttribute="width" secondItem="bYe-cs-Tch" secondAttribute="width" multiplier="0.5" id="ZMb-jY-xc1"/>
+                                                <constraint firstItem="QVa-KA-LTK" firstAttribute="width" secondItem="bYe-cs-Tch" secondAttribute="width" multiplier="0.45" id="ZMb-jY-xc1"/>
                                                 <constraint firstAttribute="bottom" secondItem="kBS-OY-ros" secondAttribute="bottom" constant="5" id="ZqL-mo-fI1"/>
                                                 <constraint firstItem="kBS-OY-ros" firstAttribute="leading" secondItem="QVa-KA-LTK" secondAttribute="trailing" constant="5" id="bWd-mI-q9M"/>
                                                 <constraint firstItem="QVa-KA-LTK" firstAttribute="centerY" secondItem="bYe-cs-Tch" secondAttribute="centerY" id="rGK-w7-DrQ"/>
@@ -74,22 +67,17 @@
                         <viewLayoutGuide key="safeArea" id="Al4-m4-VPT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="iYn-B4-hGj" firstAttribute="centerX" secondItem="Al4-m4-VPT" secondAttribute="centerX" id="EUy-Qg-XCN"/>
                             <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="lyg-6W-xkr" secondAttribute="trailing" id="HST-1g-mQB"/>
-                            <constraint firstItem="iYn-B4-hGj" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="Hc1-4U-qeH"/>
                             <constraint firstItem="Al4-m4-VPT" firstAttribute="bottom" secondItem="lyg-6W-xkr" secondAttribute="bottom" id="JXS-tv-0b0"/>
-                            <constraint firstItem="lyg-6W-xkr" firstAttribute="top" secondItem="iYn-B4-hGj" secondAttribute="bottom" constant="9" id="Ss9-Zd-IzS"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="XD2-4p-mUQ"/>
-                            <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="iYn-B4-hGj" secondAttribute="trailing" id="dGt-ne-MOY"/>
-                            <constraint firstItem="iYn-B4-hGj" firstAttribute="top" secondItem="Al4-m4-VPT" secondAttribute="top" constant="20" id="lcE-aF-irv"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="centerX" secondItem="Al4-m4-VPT" secondAttribute="centerX" id="nET-yG-c50"/>
+                            <constraint firstItem="lyg-6W-xkr" firstAttribute="top" secondItem="Al4-m4-VPT" secondAttribute="top" id="pwn-Kx-F0w"/>
                             <constraint firstItem="qml-m5-C3g" firstAttribute="centerY" secondItem="Al4-m4-VPT" secondAttribute="centerY" id="xJj-Gr-J89"/>
                             <constraint firstItem="qml-m5-C3g" firstAttribute="centerX" secondItem="Al4-m4-VPT" secondAttribute="centerX" id="xXD-3l-hpT"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="qml-m5-C3g" id="PYl-67-RPU"/>
-                        <outlet property="searchBar" destination="iYn-B4-hGj" id="zB8-Df-Yo8"/>
                         <outlet property="tableView" destination="lyg-6W-xkr" id="qP7-cn-YdB"/>
                     </connections>
                 </viewController>
