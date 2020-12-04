@@ -14,12 +14,13 @@ class NewsElementCell: UITableViewCell {
 	@IBOutlet weak var title: UILabel!
 	
 	var viewModel: NewsElementViewModel?
-	static let reuseIdentifier = "NewsListCellIdentifier"
+	static let reuseIdentifier = "NewsElementCellIdentifier"
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		// Initialization code
 	}
-	
+
+
 	override func prepareForReuse() {
 		self.smallImage.backgroundColor = UIColor.lightGray
 		self.smallImage.image = nil

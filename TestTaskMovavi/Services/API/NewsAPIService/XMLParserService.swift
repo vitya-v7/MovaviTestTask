@@ -13,11 +13,11 @@ import Foundation
 class XMLParserService: NSObject, XMLParserDelegate {
 	
 	var currentElement:Int
-	//var startElement:Int
+	var startElement:Int
 	var endElement:Int
 
 	override init() {
-		//startElement = 0
+		startElement = 0
 		endElement = Constants.newsPerPage
 		currentElement = 0
 		tempNewsElementModel = NewsElementModel(title:"Lenta RSS")
@@ -61,14 +61,16 @@ class XMLParserService: NSObject, XMLParserDelegate {
 
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName: String?) {
 		if elementName == "item" {
-			if let post = tempNewsElementModel, currentElement < endElement {
+			if let post = tempNewsElementModel, currentElement < endElement,
+			   currentElement >= startElement {
 				posts.append(post)
 			}
 			currentElement = currentElement + 1
 			tempNewsElementModel = nil
 			if currentElement > endElement - 1 {
-				//startElement = startElement + Constants.newsPerPage
+				startElement = startElement + Constants.newsPerPage
 				endElement = endElement + Constants.newsPerPage
+				currentElement = 0
 				parser.abortParsing()
 			}
 		}

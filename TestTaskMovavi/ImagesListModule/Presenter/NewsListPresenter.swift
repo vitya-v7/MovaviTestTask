@@ -12,20 +12,25 @@ class NewsListPresenter: NewsListViewOutput {
 
 	var xmlParserService: XMLParserService?
 	var view: NewsListViewInput?
-	var newsCells: [NewsElementViewModel]?
-	var indicatorModel: IndicatorViewModel?
+	var newsViewModel: [NewsElementViewModel]?
+	var indicatorViewModel: IndicatorViewModel?
+	var firstLoad = true
+	var previousNewsLoadedCount = 0
 
 	init () {}
 
 	func viewDidLoadDone() {
-		newsCells = [NewsElementViewModel]()
-		indicatorModel = IndicatorViewModel()
+
+		newsViewModel = [NewsElementViewModel]()
 		loadNews()
 		view?.setInitialState()
 	}
 
 	func nextPageIndicatorShowed() {
-		loadNews()
+		if indicatorViewModel == nil {
+			indicatorViewModel = IndicatorViewModel()
+			loadNews()
+		}
 	}
 
 	func loadNews() {
@@ -33,14 +38,24 @@ class NewsListPresenter: NewsListViewOutput {
 			guard let strongSelf = self else {
 				return
 			}
-			strongSelf.newsCells = [NewsElementViewModel]()
+			if let newsViewModel = strongSelf.newsViewModel {
+				strongSelf.previousNewsLoadedCount = newsViewModel.count
+			}
+
 			for model in data {
 				let viewModel = NewsElementViewModel.init(withElementModel: model)
-				strongSelf.newsCells?.append(viewModel)
+				strongSelf.newsViewModel?.append(viewModel)
 			}
 
 			DispatchQueue.main.async {
-				strongSelf.view!.setViewModel(viewModels:strongSelf.newsCells!)
+				if let newsViewModel = strongSelf.newsViewModel {
+					strongSelf.view!.setViewModel(viewModels: newsViewModel)
+					if strongSelf.firstLoad == false {
+						strongSelf.view!.deleteRows(at: [IndexPath.init(row: strongSelf.previousNewsLoadedCount, section: 0)])
+					}
+					strongSelf.indicatorViewModel = nil
+					strongSelf.firstLoad = false
+				}
 			}
 		}, errorCallback: { (error: Error) in
 

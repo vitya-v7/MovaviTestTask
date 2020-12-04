@@ -12,7 +12,7 @@
         <!--News List View-->
         <scene sceneID="jg0-9B-6kk">
             <objects>
-                <viewController storyboardIdentifier="NewsListViewIdentifier" id="sJC-k8-5nh" customClass="NewsListView" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewsListViewIdentifier" id="sJC-k8-5nh" customClass="NewsListView" customModule="TestTaskMovavi" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E2e-im-V4p">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -25,7 +25,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NewsElementCellIdentifier" rowHeight="200" id="CiN-Ka-Td6" customClass="ImagesElementCell" customModule="TestTaskMovavi" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NewsElementCellIdentifier" rowHeight="200" id="CiN-Ka-Td6" customClass="NewsElementCell" customModule="TestTaskMovavi" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CiN-Ka-Td6" id="bYe-cs-Tch">
