@@ -28,7 +28,7 @@ class ImagesElementCell: UITableViewCell {
 	func configureCell(withObject object: NewsElementViewModel) {
 		viewModel = object
 		setImageToImageView(urlString: object.imageURL!)
-		self.title!.text = "Title: " + object.title!
+		self.title!.text = object.title!
 	}
 	
 	func setImageToImageView(urlString: String) {
@@ -44,11 +44,15 @@ class ImagesElementCell: UITableViewCell {
 					else {
 						strongSelf.smallImage.image = nil
 					}
+					strongSelf.smallImage.contentMode = .scaleAspectFit
+					strongSelf.smallImage.backgroundColor = .white
+					
 				}
 			} else {
 				strongSelf.smallImage.image = nil
 				print("Error loading image");
 			}
+
 		}
 	}
 }

@@ -16,7 +16,7 @@ protocol ImagesListViewInput : UIViewController {
 
 protocol ImagesListViewOutput {
 	func viewDidLoadDone()
-	func loadImages()
+	func loadNews()
 }
 
 class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
@@ -54,7 +54,7 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 	}
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 100
+		return 220
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -81,5 +81,18 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 	
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		searchBar.endEditing(true)
+	}
+
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if let cell = tableView.cellForRow(at: indexPath) as? ImagesElementCell {
+			cell.smallImage.backgroundColor = cell.backgroundColor
+		}
+	}
+
+	func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		if let cell = tableView.cellForRow(at: indexPath) as? ImagesElementCell {
+			tableView.backgroundColor = .white
+			cell.smallImage.backgroundColor = cell.backgroundColor
+		}
 	}
 }

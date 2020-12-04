@@ -12,7 +12,7 @@ class ImagesListPresenter: ImagesListViewOutput {
 
 	var xmlParserService: XMLParserService?
 	var view: ImagesListViewInput?
-	var imagesCells: [Post]?
+	var newsCells: [NewsElementViewModel]?
 
 	init () {}
 
@@ -27,15 +27,15 @@ class ImagesListPresenter: ImagesListViewOutput {
 			guard let strongSelf = self else {
 				return
 			}
-			strongSelf.imagesCells = [Post]()
+			strongSelf.newsCells = [NewsElementViewModel]()
 			for model in data {
 				let viewModel = NewsElementViewModel.init(withElementModel: model)
-				strongSelf.imagesCells?.append(viewModel)
+				strongSelf.newsCells?.append(viewModel)
 			}
 
 			DispatchQueue.main.async {
 				strongSelf.view!.showLoading(show: false)
-				strongSelf.view!.setViewModel(viewModels:strongSelf.imagesCells!)
+				strongSelf.view!.setViewModel(viewModels:strongSelf.newsCells!)
 			}
 		}, errorCallback: { (error: Error) in
 			DispatchQueue.main.async {
