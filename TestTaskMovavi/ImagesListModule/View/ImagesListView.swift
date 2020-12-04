@@ -54,7 +54,7 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 	}
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 220
+		return 200
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -74,7 +74,6 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 	//MARK: UISearchBarDelegate
 	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 		if let text = searchBar.text, text != "" {
-			//output?.loadImages()
 		}
 		searchBar.endEditing(true)
 	}
