@@ -61,6 +61,28 @@
                                             <outlet property="title" destination="kBS-OY-ros" id="MZS-xz-VIt"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivityCellIdentifier" rowHeight="50" id="Ce9-xK-VYC" customClass="IndicatorViewCell" customModule="TestTaskMovavi" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="228" width="320" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ce9-xK-VYC" id="o4Y-h8-Dye">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="1ti-T6-F5r">
+                                                    <rect key="frame" x="102.5" y="14" width="115" height="22"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="1ti-T6-F5r" firstAttribute="height" secondItem="o4Y-h8-Dye" secondAttribute="height" multiplier="0.44" id="1Bt-YN-f8u"/>
+                                                <constraint firstItem="1ti-T6-F5r" firstAttribute="centerX" secondItem="o4Y-h8-Dye" secondAttribute="centerX" id="U1g-Jc-DKQ"/>
+                                                <constraint firstItem="1ti-T6-F5r" firstAttribute="centerY" secondItem="o4Y-h8-Dye" secondAttribute="centerY" id="ljK-uc-Zr8"/>
+                                                <constraint firstItem="1ti-T6-F5r" firstAttribute="width" secondItem="o4Y-h8-Dye" secondAttribute="width" multiplier="0.359375" id="llA-ct-Sgy"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="activityIndicator" destination="1ti-T6-F5r" id="Wrn-2Z-hJw"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>
@@ -83,7 +105,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bw7-tE-8Rn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="131.8840579710145" y="133.92857142857142"/>
+            <point key="canvasLocation" x="-298" y="-274"/>
         </scene>
     </scenes>
     <resources>

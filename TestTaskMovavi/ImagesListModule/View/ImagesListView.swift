@@ -11,7 +11,7 @@ import UIKit
 protocol ImagesListViewInput : UIViewController {
 	func setInitialState()
 	func setViewModel(viewModels: [NewsElementViewModel])
-	func showLoading(show: Bool)
+
 }
 
 protocol ImagesListViewOutput {
@@ -20,7 +20,7 @@ protocol ImagesListViewOutput {
 }
 
 class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
-	@IBOutlet var searchBar: UISearchBar?
+
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
 	@IBOutlet var tableView: UITableView?
 	var output: ImagesListViewOutput?
@@ -31,53 +31,78 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 		super.viewDidLoad()
 		self.tableView?.delegate = self
 		self.tableView?.dataSource = self
+		self.tableView?.estimatedRowHeight = 0
 		output?.viewDidLoadDone()
 		
 	}
-	
-	func showLoading(show: Bool) {
-		if show {
-			self.activityIndicator?.startAnimating()
-		}
-		else {
-			self.activityIndicator?.stopAnimating()
-		}
-	}
-	
+
 	func setViewModel(viewModels:[NewsElementViewModel]) {
 		self.viewModels = viewModels
 		self.tableView?.reloadData()
 	}
 	
 	func setInitialState() {
-		self.searchBar?.returnKeyType = .done
+		//	self.searchBar?.returnKeyType = .done
 	}
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 200
+		/*if tableView.cellForRow(at: indexPath)?.reuseIdentifier == ImagesElementCell.reuseIdentifier {
+			return Constants.heightForNewsCell
+		}
+		if tableView.cellForRow(at: indexPath)?.reuseIdentifier == IndicatorViewCell.reuseIdentifier {
+			return Constants.heightForActivityIndicatorCell
+		}*/
+		return 100
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: ImagesElementCell.reuseIdentifier) as! ImagesElementCell
-		cell.configureCell(withObject: viewModels![indexPath.row])
-		return cell
+		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: IndicatorViewCell.reuseIdentifier) as! IndicatorViewCell
+			return cell
+		}
+		else {
+			let cell = tableView.dequeueReusableCell(withIdentifier: ImagesElementCell.reuseIdentifier) as! ImagesElementCell
+			cell.configureCell(withObject: viewModels![indexPath.row])
+			return cell
+		}
+
+		
 	}
-	
+
+	func tableView(_ tableView: UITableView,
+				   willDisplay cell: UITableViewCell,
+				   forRowAt indexPath: IndexPath) {
+		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0 {
+			if let cell = cell as? IndicatorViewCell {
+				cell.activityIndicator?.startAnimating()
+				//tableView.beginUpdates()
+				//tableView.deleteRows(at: [indexPath], with: .bottom)
+				//tableView.endUpdates()
+				output?.loadNews()
+			}
+		}
+	}
+
+
 	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
-	
+
+
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return self.viewModels?.count ?? 0
+		if let viewModels = self.viewModels {
+			return viewModels.count + 1
+		}
+		return 0
 	}
-	
+
 	//MARK: UISearchBarDelegate
 	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 		if let text = searchBar.text, text != "" {
 		}
 		searchBar.endEditing(true)
 	}
-	
+
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		searchBar.endEditing(true)
 	}
@@ -94,4 +119,5 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 			cell.smallImage.backgroundColor = cell.backgroundColor
 		}
 	}
+
 }

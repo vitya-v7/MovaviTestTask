@@ -15,20 +15,26 @@ struct Post {
 
 class XMLParserService: NSObject, XMLParserDelegate {
 	
+	var currentElement:Int
+	var startElement:Int
+	var endElement:Int
 
 	override init() {
-		super.init()
-
+		startElement = 0
+		endElement = Constants.newsPerPage
+		currentElement = 0
 		tempPost = Post(title:"Lenta RSS")
+		super.init()
 	}
+
 
 	var posts:[Post] = []
 	var parser = XMLParser()
+	
 	var tempPost: Post? = nil
 	var tempElement: String?
 
 	var apiService: APIService? = nil
-	var delegate: XMLParserService?
 	func getNews(successCallback: @escaping ([Post]) -> (), errorCallback: @escaping (Error) -> ()) {
 		apiService!.getRequest(path: APIService.shared.host, successCallback: { [weak self] (data: Data?) in
 			guard let strongSelf = self else { return }
@@ -36,14 +42,13 @@ class XMLParserService: NSObject, XMLParserDelegate {
 			strongSelf.parser.delegate = self
 			strongSelf.parser.parse()
 			successCallback(strongSelf.posts)
+			strongSelf.posts = []
 		}, errorCallback: errorCallback)
 	}
 
 
 	//MARK: - XMLParserDelegate
-	private func parser(parser: XMLParser, parseErrorOccurred parseError: NSError) {
-		print("parse error: \(parseError)")
-	}
+
 	var urlImage: String?
 	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName: String?, attributes: [String : String]) {
 		tempElement = elementName
@@ -59,11 +64,16 @@ class XMLParserService: NSObject, XMLParserDelegate {
 
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName: String?) {
 		if elementName == "item" {
-			if let post = tempPost {
+			if let post = tempPost, currentElement >= startElement, currentElement < endElement {
 				posts.append(post)
 			}
-
+			currentElement = currentElement + 1
 			tempPost = nil
+			if currentElement > endElement - 1 {
+				startElement = startElement + Constants.newsPerPage
+				endElement = endElement + Constants.newsPerPage
+				parser.abortParsing()
+			}
 		}
 	}
 
@@ -73,5 +83,9 @@ class XMLParserService: NSObject, XMLParserDelegate {
 				tempPost?.title = post.title+string
 			}
 		}
+	}
+
+	func parserDidEndDocument(_ parser: XMLParser) {
+
 	}
 }

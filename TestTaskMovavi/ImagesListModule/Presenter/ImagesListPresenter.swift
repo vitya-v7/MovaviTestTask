@@ -17,30 +17,27 @@ class ImagesListPresenter: ImagesListViewOutput {
 	init () {}
 
 	func viewDidLoadDone() {
+		newsCells = [NewsElementViewModel]()
 		loadNews()
 		view?.setInitialState()
 	}
 
 	func loadNews() {
-		self.view!.showLoading(show: true)
 		xmlParserService?.getNews(successCallback: { [weak self] (data:[Post]) -> ()  in
 			guard let strongSelf = self else {
 				return
 			}
-			strongSelf.newsCells = [NewsElementViewModel]()
+			
 			for model in data {
 				let viewModel = NewsElementViewModel.init(withElementModel: model)
 				strongSelf.newsCells?.append(viewModel)
 			}
 
 			DispatchQueue.main.async {
-				strongSelf.view!.showLoading(show: false)
 				strongSelf.view!.setViewModel(viewModels:strongSelf.newsCells!)
 			}
 		}, errorCallback: { (error: Error) in
-			DispatchQueue.main.async {
-				self.view!.showLoading(show: false)
-			}
+
 		})
 
 	}

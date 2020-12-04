@@ -48,28 +48,6 @@ class APIService {
 		}
 	}
 	
-	private func addAPIKey(parameters:[String:String]) -> [String:String] {
-		var inParameters = parameters
-		inParameters.updateValue(String.init(APIKey), forKey: "key")
-		return inParameters
-	}
-	
-	private func createQueryParametersString(parameters:  [String:String]) -> String? {
-		if parameters.count == 0 {
-			return nil
-		}
-		var result: String = ""
-		var index = 0
-		for (key, value) in parameters {
-			if index > 0 {
-				result += "&"
-			}
-			result += key + "=" + value
-			index += 1
-		}
-		return result
-	}
-	
 	private func isSuccessResponse(response: HTTPURLResponse) -> Bool {
 		if response.statusCode >= 200 && response.statusCode <= 299 {
 			return true
