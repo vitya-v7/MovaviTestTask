@@ -1,5 +1,5 @@
 //
-//  ImagesElementCell.swift
+//  NewsElementCell.swift
 //  TestTaskMovavi
 //
 //  Created by Viktor D. on 17.08.2020.
@@ -8,13 +8,13 @@
 
 import UIKit
 
-class ImagesElementCell: UITableViewCell {
+class NewsElementCell: UITableViewCell {
 	
 	@IBOutlet weak var smallImage: UIImageView!
 	@IBOutlet weak var title: UILabel!
 	
 	var viewModel: NewsElementViewModel?
-	static let reuseIdentifier = "ImagesListCellIdentifier"
+	static let reuseIdentifier = "NewsListCellIdentifier"
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		// Initialization code
@@ -52,7 +52,6 @@ class ImagesElementCell: UITableViewCell {
 				strongSelf.smallImage.image = nil
 				print("Error loading image");
 			}
-
 		}
 	}
 }

@@ -1,6 +1,6 @@
 //
-//  ImagesListView.swift
-//  TestTask
+//  NewsListView.swift
+//  TestTaskMovavi
 //
 //  Created by Viktor D. on 16.08.2020.
 //  Copyright © 2020 Viktor D. All rights reserved.
@@ -8,30 +8,33 @@
 
 import UIKit
 
-protocol ImagesListViewInput : UIViewController {
+protocol NewsListViewInput : UIViewController {
 	func setInitialState()
 	func setViewModel(viewModels: [NewsElementViewModel])
 
 }
 
-protocol ImagesListViewOutput {
+protocol NewsListViewOutput {
 	func viewDidLoadDone()
 	func loadNews()
+	func nextPageIndicatorShowed()
 }
 
-class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
+class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
 
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
 	@IBOutlet var tableView: UITableView?
-	var output: ImagesListViewOutput?
+	var output: NewsListViewOutput?
 	
 	var viewModels: [NewsElementViewModel]?
+	var indicatorModel: IndicatorViewModel?
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.tableView?.delegate = self
 		self.tableView?.dataSource = self
-		self.tableView?.estimatedRowHeight = 0
+		
+		//self.tableView?.estimatedRowHeight = 0
 		output?.viewDidLoadDone()
 		
 	}
@@ -58,6 +61,7 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: IndicatorViewCell.reuseIdentifier) as! IndicatorViewCell
+			cell.configureCell(withObject: indicatorModel)
 			return cell
 		}
 		else {
@@ -74,20 +78,15 @@ class ImagesListView: UIViewController, ImagesListViewInput, UITableViewDelegate
 				   forRowAt indexPath: IndexPath) {
 		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0 {
 			if let cell = cell as? IndicatorViewCell {
-				cell.activityIndicator?.startAnimating()
-				//tableView.beginUpdates()
-				//tableView.deleteRows(at: [indexPath], with: .bottom)
-				//tableView.endUpdates()
+				output?.nextPageIndicatorShowed() //берет вью модели которые у него есть
 				output?.loadNews()
 			}
 		}
 	}
 
-
 	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
-
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if let viewModels = self.viewModels {

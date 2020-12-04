@@ -9,16 +9,15 @@
 import UIKit
 
 class AbstractFactory {
-	class func createImagesListModule() -> UIViewController {
+	class func createNewsListModule() -> UIViewController {
 		let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-		let view = storyboard.instantiateViewController(identifier: "ImagesListViewIdentifier") as! ImagesListView
+		let view = storyboard.instantiateViewController(identifier: "NewsListViewIdentifier") as! NewsListView
 		
-		let presenter = ImagesListPresenter()
+		let presenter = NewsListPresenter()
 		view.output = presenter
 		presenter.view = view
 		
-		let imageApiService = ImagesApiService.init()
-		imageApiService.apiService = APIService.shared
+
 
 		let xmlParserService = XMLParserService.init()
 		xmlParserService.apiService = APIService.shared

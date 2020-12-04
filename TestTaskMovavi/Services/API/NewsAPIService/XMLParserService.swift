@@ -8,34 +8,31 @@
 
 import Foundation
 
-struct Post {
-	public var title: String!
-	public var url: String!
-}
+
 
 class XMLParserService: NSObject, XMLParserDelegate {
 	
 	var currentElement:Int
-	var startElement:Int
+	//var startElement:Int
 	var endElement:Int
 
 	override init() {
-		startElement = 0
+		//startElement = 0
 		endElement = Constants.newsPerPage
 		currentElement = 0
-		tempPost = Post(title:"Lenta RSS")
+		tempNewsElementModel = NewsElementModel(title:"Lenta RSS")
 		super.init()
 	}
 
 
-	var posts:[Post] = []
+	var posts:[NewsElementModel] = []
 	var parser = XMLParser()
 	
-	var tempPost: Post? = nil
+	var tempNewsElementModel: NewsElementModel? = nil
 	var tempElement: String?
 
 	var apiService: APIService? = nil
-	func getNews(successCallback: @escaping ([Post]) -> (), errorCallback: @escaping (Error) -> ()) {
+	func getNews(successCallback: @escaping ([NewsElementModel]) -> (), errorCallback: @escaping (Error) -> ()) {
 		apiService!.getRequest(path: APIService.shared.host, successCallback: { [weak self] (data: Data?) in
 			guard let strongSelf = self else { return }
 			strongSelf.parser = XMLParser.init(data: data!)
@@ -53,24 +50,24 @@ class XMLParserService: NSObject, XMLParserDelegate {
 	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName: String?, attributes: [String : String]) {
 		tempElement = elementName
 		if elementName == "item" {
-			tempPost = Post(title: "", url: "")
+			tempNewsElementModel = NewsElementModel(title: "", url: "")
 		}
 		if elementName == "enclosure" {
 			if let urlString = attributes["url"] {
-				tempPost?.url = urlString
+				tempNewsElementModel?.url = urlString
 			}
 		}
 	}
 
 	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName: String?) {
 		if elementName == "item" {
-			if let post = tempPost, currentElement >= startElement, currentElement < endElement {
+			if let post = tempNewsElementModel, currentElement < endElement {
 				posts.append(post)
 			}
 			currentElement = currentElement + 1
-			tempPost = nil
+			tempNewsElementModel = nil
 			if currentElement > endElement - 1 {
-				startElement = startElement + Constants.newsPerPage
+				//startElement = startElement + Constants.newsPerPage
 				endElement = endElement + Constants.newsPerPage
 				parser.abortParsing()
 			}
@@ -78,9 +75,9 @@ class XMLParserService: NSObject, XMLParserDelegate {
 	}
 
 	func parser(_ parser: XMLParser, foundCharacters string: String) {
-		if let post = tempPost {
+		if let post = tempNewsElementModel {
 			if tempElement == "title" {
-				tempPost?.title = post.title+string
+				tempNewsElementModel?.title = post.title+string
 			}
 		}
 	}

@@ -11,16 +11,20 @@ import UIKit
 class IndicatorViewCell: UITableViewCell {
 
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
+
+	var viewModel: IndicatorViewModel?
+	static let reuseIdentifier = "ActivityCellIdentifier"
     override func awakeFromNib() {
         super.awakeFromNib()
 		activityIndicator?.startAnimating()
         // Initialization code
     }
-	static let reuseIdentifier = "ActivityCellIdentifier"
+	
+	func configureCell(withObject object: IndicatorViewModel?) {
+		viewModel = object
+	}
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
-
 }

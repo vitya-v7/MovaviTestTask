@@ -13,8 +13,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		guard let windowScene = (scene as? UIWindowScene) else { return }
-		let imagesView = AbstractFactory.createImagesListModule()
-		let navVc = UINavigationController.init(rootViewController: imagesView)
+		let newsView = AbstractFactory.createNewsListModule()
+		let navVc = UINavigationController.init(rootViewController: newsView)
 		self.window = UIWindow(windowScene: windowScene)
 		self.window!.rootViewController = navVc
 		self.window!.makeKeyAndVisible()

@@ -12,7 +12,7 @@ class NewsElementViewModel {
 	var title: String?
 	var imageURL: String?
 
-	init (withElementModel model: Post) {
+	init (withElementModel model: NewsElementModel) {
 		self.title = model.title
 		self.imageURL = model.url
 	}
