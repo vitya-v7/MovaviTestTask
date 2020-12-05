@@ -36,15 +36,16 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 		posts = nil
 	}
 
-	func parseData(page: Int, limit: Int) -> [NewsElementModel]? {
+	func parseData(data: Data, page: Int, limit: Int) -> [NewsElementModel]? {
 		self.page = page
 		self.limit = limit
 		currentElement = 0
 		endElement = (page + 1) * limit
 		startElement = page * limit
 
-		let xmlParser = XMLParser()
+		let xmlParser = XMLParser.init(data: data)
 		xmlParser.delegate = self
+
 		xmlParser.parse()
 
 		return posts

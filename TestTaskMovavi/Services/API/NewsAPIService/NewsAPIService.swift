@@ -16,8 +16,10 @@ class NewsAPIService {
 		apiService!.getRequest(path: APIService.shared.host, successCallback: { [weak self] (data: Data?) in
 			guard let strongSelf = self else { return }
 			strongSelf.xmlParserNews = XMLParserNews()
-			let news = strongSelf.xmlParserNews?.parseData(page: page, limit: limit)
-			successCallback(news)
+			if let data = data {
+				let news = strongSelf.xmlParserNews?.parseData(data: data, page: page, limit: limit)
+				successCallback(news)
+			}
 			
 		}, errorCallback: errorCallback)
 	}
