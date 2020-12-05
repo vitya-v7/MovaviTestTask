@@ -1,5 +1,5 @@
 //
-//  XMLParserService.swift
+//  XMLParserNews.swift
 //  TestTaskMovavi
 //
 //  Created by Admin on 03.12.2020.
@@ -10,39 +10,42 @@ import Foundation
 
 
 
-class XMLParserService: NSObject, XMLParserDelegate {
+class XMLParserNews: NSObject, XMLParserDelegate {
 	
-	var currentElement:Int
-	var startElement:Int
-	var endElement:Int
+	var page: Int
+	var limit: Int
+	var currentElement: Int
+	var endElement: Int
+	var startElement: Int
+	var tempNewsElementModel: NewsElementModel? = nil
+	var tempElement: String?
+	var posts:[NewsElementModel]?
 
 	override init() {
 		startElement = 0
-		endElement = Constants.newsPerPage
+		endElement = 0
 		currentElement = 0
+		self.page = 0
+		self.limit = Constants.newsPerPage
 		tempNewsElementModel = NewsElementModel(title:"Lenta RSS")
+		posts = [NewsElementModel]()
 		super.init()
 	}
 
-
-	var posts:[NewsElementModel] = []
-	var parser = XMLParser()
-	
-	var tempNewsElementModel: NewsElementModel? = nil
-	var tempElement: String?
-
-	var apiService: APIService? = nil
-	func getNews(successCallback: @escaping ([NewsElementModel]) -> (), errorCallback: @escaping (Error) -> ()) {
-		apiService!.getRequest(path: APIService.shared.host, successCallback: { [weak self] (data: Data?) in
-			guard let strongSelf = self else { return }
-			strongSelf.parser = XMLParser.init(data: data!)
-			strongSelf.parser.delegate = self
-			strongSelf.parser.parse()
-			successCallback(strongSelf.posts)
-			strongSelf.posts = []
-		}, errorCallback: errorCallback)
+	deinit {
+		posts = nil
 	}
 
+	func parseData(page: Int, limit: Int) -> [NewsElementModel]? {
+		self.page = page
+		self.limit = limit
+		let xmlParser = XMLParser()
+		xmlParser.delegate = self
+		endElement = (page + 1) * limit
+		startElement = page * limit
+		xmlParser.parse()
+		return posts
+	}
 
 	//MARK: - XMLParserDelegate
 
@@ -63,14 +66,14 @@ class XMLParserService: NSObject, XMLParserDelegate {
 		if elementName == "item" {
 			if let post = tempNewsElementModel, currentElement < endElement,
 			   currentElement >= startElement {
-				posts.append(post)
+				posts?.append(post)
 			}
 			currentElement = currentElement + 1
 			tempNewsElementModel = nil
-			if currentElement > endElement - 1 {
-				startElement = startElement + Constants.newsPerPage
-				endElement = endElement + Constants.newsPerPage
+			if currentElement > endElement {
+				page = page + 1
 				currentElement = 0
+
 				parser.abortParsing()
 			}
 		}

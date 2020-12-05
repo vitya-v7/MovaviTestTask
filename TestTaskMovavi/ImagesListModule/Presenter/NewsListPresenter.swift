@@ -10,51 +10,55 @@ import UIKit
 
 class NewsListPresenter: NewsListViewOutput {
 
-	var xmlParserService: XMLParserService?
-	var view: NewsListViewInput?
-	var newsViewModel: [NewsElementViewModel]?
-	var indicatorViewModel: IndicatorViewModel?
-	var firstLoad = true
-	var previousNewsLoadedCount = 0
 
+	var newsAPIService: NewsAPIService?
+	var view: NewsListViewInput?
+	var newsViewModel: [AnyObject]?
+	var currentPage = 0
+	var limit = Constants.newsPerPage
+	var listFulfilled = false
 	init () {}
 
 	func viewDidLoadDone() {
 
-		newsViewModel = [NewsElementViewModel]()
+		newsViewModel = [AnyObject]()
 		loadNews()
 		view?.setInitialState()
 	}
 
 	func nextPageIndicatorShowed() {
-		if indicatorViewModel == nil {
-			indicatorViewModel = IndicatorViewModel()
+		if listFulfilled == true {
+			newsViewModel?.removeLast()
+		}
+		else {
+			newsViewModel?.append(IndicatorViewCell())
 			loadNews()
 		}
 	}
 
 	func loadNews() {
-		xmlParserService?.getNews(successCallback: { [weak self] (data:[NewsElementModel]) -> ()  in
+		newsAPIService?.getNews(page: currentPage + 1, limit: limit, successCallback: { [weak self] (data:[NewsElementModel]?) -> ()  in
 			guard let strongSelf = self else {
 				return
 			}
-			if let newsViewModel = strongSelf.newsViewModel {
-				strongSelf.previousNewsLoadedCount = newsViewModel.count
+			var countLoadedNews = 0
+			if strongSelf.currentPage > 0 {
+				strongSelf.newsViewModel?.removeLast()
 			}
-
-			for model in data {
-				let viewModel = NewsElementViewModel.init(withElementModel: model)
-				strongSelf.newsViewModel?.append(viewModel)
+			if let dataIn = data {
+				for model in dataIn {
+					let viewModel = NewsElementViewModel.init(withElementModel: model)
+					countLoadedNews = countLoadedNews + 1
+					strongSelf.newsViewModel?.append(viewModel)
+				}
 			}
-
+			strongSelf.currentPage = strongSelf.currentPage + 1
+			if countLoadedNews + 1 < strongSelf.limit * strongSelf.currentPage {
+				strongSelf.listFulfilled = true
+			}
 			DispatchQueue.main.async {
 				if let newsViewModel = strongSelf.newsViewModel {
 					strongSelf.view!.setViewModel(viewModels: newsViewModel)
-					if strongSelf.firstLoad == false {
-						strongSelf.view!.deleteRows(at: [IndexPath.init(row: strongSelf.previousNewsLoadedCount, section: 0)])
-					}
-					strongSelf.indicatorViewModel = nil
-					strongSelf.firstLoad = false
 				}
 			}
 		}, errorCallback: { (error: Error) in

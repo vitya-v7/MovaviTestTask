@@ -19,10 +19,10 @@ class AbstractFactory {
 		
 
 
-		let xmlParserService = XMLParserService.init()
-		xmlParserService.apiService = APIService.shared
+		let newsAPIService = NewsAPIService.init()
+		newsAPIService.apiService = APIService.shared
 
-		presenter.xmlParserService = xmlParserService
+		presenter.newsAPIService = newsAPIService
 
 		return view
 	}

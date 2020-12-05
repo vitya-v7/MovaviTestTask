@@ -10,9 +10,7 @@ import UIKit
 
 protocol NewsListViewInput : UIViewController {
 	func setInitialState()
-	func setViewModel(viewModels: [NewsElementViewModel])
-	func deleteRows(at indexPath: [IndexPath])
-	func reloadData()
+	func setViewModel(viewModels: [AnyObject])
 }
 
 protocol NewsListViewOutput {
@@ -26,16 +24,12 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
 	@IBOutlet var tableView: UITableView?
 	var output: NewsListViewOutput?
-	var newsViewModels: [NewsElementViewModel]?
-	var indicatorViewModel: [IndicatorViewModel]?
+	var newsViewModels: [AnyObject]?
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.tableView?.delegate = self
 		self.tableView?.dataSource = self
-		self.indicatorViewModel = [IndicatorViewModel]()
-		self.indicatorViewModel?.append(IndicatorViewModel())
-		//self.tableView?.estimatedRowHeight = 0
 		output?.viewDidLoadDone()
 		
 	}
@@ -44,50 +38,9 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 		self.tableView?.reloadData()
 	}
 	
-	/*func deleteRows(at indexPath: [IndexPath]) {
-		UIView.setAnimationsEnabled(false)
-		self.tableView?.beginUpdates()
-		//cell.textView.scrollRangeToVisible(NSMakeRange(cell.textView.text.characters.count-1, 0))		self.tableView?.deleteRows(at: indexPath, with: .left)
-		self.tableView?.endUpdates()
-		UIView.setAnimationsEnabled(true)
-		self.tableView?.scrollToRow(at: indexPath.first!, at: .bottom, animated: false)
-		self.tableView?.reloadData()
-		//self.tableView?.beginUpdates()
-		/*
-		self.tableView?.deleteRows(at: indexPath, with: .left)
-		//self.tableView?.endUpdates()
-		self.tableView?.reloadData()*/
-	}*/
 
 
-
-	private var frozenContentOffsetForRowAnimation: CGPoint?
-
-	func deleteRows(at indexPath: [IndexPath]) {
-		let originalContentOffset = self.tableView?.contentOffset
-		self.tableView?.beginUpdates()
-		self.indicatorViewModel?.removeLast()
-		self.tableView?.deleteRows(at: indexPath, with: .left)
-		self.tableView?.reloadData()
-
-		self.tableView?.endUpdates()
-
-		if self.tableView?.contentOffset != originalContentOffset {
-		  frozenContentOffsetForRowAnimation = self.tableView?.contentOffset
-	  }
-	}
-
-	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-		frozenContentOffsetForRowAnimation = nil
-	}
-
-	func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		if let overrideOffset = frozenContentOffsetForRowAnimation, scrollView.contentOffset != overrideOffset {
-			scrollView.setContentOffset(overrideOffset, animated: false)
-		}
-	}
-
-	func setViewModel(viewModels:[NewsElementViewModel]) {
+	func setViewModel(viewModels:[AnyObject]) {
 		self.newsViewModels = viewModels
 		self.tableView?.reloadData()
 	}
@@ -107,18 +60,9 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0 {
-			let cell = tableView.dequeueReusableCell(withIdentifier: IndicatorViewCell.reuseIdentifier) as! IndicatorViewCell
-			if let indicatorViewModel = indicatorViewModel {
-				cell.configureCell(withObject: indicatorViewModel[0])
-			}
-			return cell
-		}
-		else {
-			let cell = tableView.dequeueReusableCell(withIdentifier: NewsElementCell.reuseIdentifier) as! NewsElementCell
-			cell.configureCell(withObject: newsViewModels![indexPath.row])
-			return cell
-		}
+		let cell = tableView.dequeueReusableCell(withIdentifier: NewsElementCell.reuseIdentifier) as! NewsElementCell
+		cell.configureCell(withObject: newsViewModels![indexPath.row] as! NewsElementViewModel)
+		return cell
 	}
 
 	func tableView(_ tableView: UITableView,
@@ -126,6 +70,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 				   forRowAt indexPath: IndexPath) {
 		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0 {
 			if cell is IndicatorViewCell {
+
 				output?.nextPageIndicatorShowed()
 			}
 		}
@@ -136,14 +81,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		var sum = 0
-		if let viewModels = self.newsViewModels {
-			sum = sum + viewModels.count
-		}
-		if let indicatorViewModel = self.indicatorViewModel {
-			sum = sum + indicatorViewModel.count
-		}
-		return sum
+		return newsViewModels?.count ?? 0
 	}
 
 	//MARK: UISearchBarDelegate
