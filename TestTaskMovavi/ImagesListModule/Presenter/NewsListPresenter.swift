@@ -32,16 +32,19 @@ class NewsListPresenter: NewsListViewOutput {
 		if listFulfilled == false {
 			loadNews()
 		}
-	}
-
-	func appendViewModel(viewModel: AnyObject) {
-		newsViewModel?.append(viewModel)
-		self.view?.appendViewModel(viewModel: viewModel)
-	}
-
-	func removeLastViewModel() {
-		newsViewModel?.removeLast()
-		self.view?.removeLastViewModel()
+		else {
+			DispatchQueue.main.async {
+				self.newsViewModel?.removeLast()
+				DispatchQueue.main.async { [weak self] in
+					guard let strongSelf = self else {
+						return
+					}
+					if let newsViewModel = strongSelf.newsViewModel {
+						strongSelf.view!.setViewModel(viewModels: newsViewModel)
+					}
+				}
+			}
+		}
 	}
 
 	func loadNews() {
@@ -51,11 +54,13 @@ class NewsListPresenter: NewsListViewOutput {
 				return
 			}
 
-			DispatchQueue.main.async {
-				if strongSelf.firstLoad == false {
-					strongSelf.removeLastViewModel()
+			if strongSelf.firstLoad == false {
+				strongSelf.newsViewModel?.removeLast()
+				DispatchQueue.main.async {
+					strongSelf.view?.removeLastViewModel()
 				}
 			}
+			strongSelf.firstLoad = false
 
 			if let dataIn = data {
 				for model in dataIn {
@@ -70,13 +75,17 @@ class NewsListPresenter: NewsListViewOutput {
 			}
 
 			strongSelf.currentPage = strongSelf.currentPage + 1
+
+			if strongSelf.listFulfilled == false {
+				let indicatorModel = IndicatorViewModel()
+				strongSelf.newsViewModel?.append(indicatorModel)
+				
+			}
+
 			DispatchQueue.main.async {
 				if let newsViewModel = strongSelf.newsViewModel {
+					
 					strongSelf.view!.setViewModel(viewModels: newsViewModel)
-				}
-				if strongSelf.listFulfilled == false {
-					let indicatorCell = IndicatorViewCell()
-					strongSelf.appendViewModel(viewModel: indicatorCell)
 				}
 			}
 		}, errorCallback: { (error: Error) in

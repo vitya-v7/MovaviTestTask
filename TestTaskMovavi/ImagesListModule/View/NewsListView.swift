@@ -56,7 +56,11 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 
 	func removeLastViewModel() {
+
+		//self.tableView?.beginUpdates()
 		self.newsViewModels?.removeLast()
+		self.tableView?.deleteRows(at: [IndexPath.init(row: self.newsViewModels!.count, section: 0)], with: .fade)
+		//self.tableView?.endUpdates()
 		self.tableView?.reloadData()
 	}
 
