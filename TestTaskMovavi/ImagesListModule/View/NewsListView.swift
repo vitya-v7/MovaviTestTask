@@ -11,6 +11,8 @@ import UIKit
 protocol NewsListViewInput : UIViewController {
 	func setInitialState()
 	func setViewModel(viewModels: [AnyObject])
+	func appendViewModel(viewModel: AnyObject)
+	func removeLastViewModel()
 }
 
 protocol NewsListViewOutput {
@@ -38,13 +40,26 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	func reloadData() {
 		self.tableView?.reloadData()
 	}
+	
+
 
 	func setViewModel(viewModels:[AnyObject]) {
 		self.indicatorCellVisibleForTheFirstTime = true
 		self.newsViewModels = viewModels
 		self.tableView?.reloadData()
 	}
-	
+
+	func appendViewModel(viewModel: AnyObject) {
+		print("dasd")
+		self.newsViewModels?.append(viewModel)
+		self.tableView?.reloadData()
+	}
+
+	func removeLastViewModel() {
+		self.newsViewModels?.removeLast()
+		self.tableView?.reloadData()
+	}
+
 	func setInitialState() {
 		//	self.searchBar?.returnKeyType = .done
 	}
@@ -60,9 +75,16 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: NewsElementCell.reuseIdentifier) as! NewsElementCell
-		cell.configureCell(withObject: newsViewModels![indexPath.row] as! NewsElementViewModel)
-		return cell
+
+		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row > 0 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: IndicatorViewCell.reuseIdentifier) as! IndicatorViewCell
+			return cell
+		}
+		else {
+			let cell = tableView.dequeueReusableCell(withIdentifier: NewsElementCell.reuseIdentifier) as! NewsElementCell
+			cell.configureCell(withObject: newsViewModels![indexPath.row] as! NewsElementViewModel)
+			return cell
+		}
 	}
 
 	func tableView(_ tableView: UITableView,

@@ -17,6 +17,8 @@ class NewsListPresenter: NewsListViewOutput {
 	var currentPage = 0
 	var limit = Constants.newsPerPage
 	var listFulfilled = false
+	var firstLoad = true
+
 	init () {}
 
 	func viewDidLoadDone() {
@@ -27,8 +29,19 @@ class NewsListPresenter: NewsListViewOutput {
 	}
 
 	func nextPageIndicatorShowed() {
-		newsViewModel?.append(IndicatorViewCell())
-		loadNews()
+		if listFulfilled == false {
+			loadNews()
+		}
+	}
+
+	func appendViewModel(viewModel: AnyObject) {
+		newsViewModel?.append(viewModel)
+		self.view?.appendViewModel(viewModel: viewModel)
+	}
+
+	func removeLastViewModel() {
+		newsViewModel?.removeLast()
+		self.view?.removeLastViewModel()
 	}
 
 	func loadNews() {
@@ -37,9 +50,13 @@ class NewsListPresenter: NewsListViewOutput {
 			guard let strongSelf = self else {
 				return
 			}
-			if strongSelf.currentPage > 0 {
-				strongSelf.newsViewModel?.removeLast()
+
+			DispatchQueue.main.async {
+				if strongSelf.firstLoad == false {
+					strongSelf.removeLastViewModel()
+				}
 			}
+
 			if let dataIn = data {
 				for model in dataIn {
 					let viewModel = NewsElementViewModel.init(withElementModel: model)
@@ -47,13 +64,19 @@ class NewsListPresenter: NewsListViewOutput {
 					strongSelf.newsViewModel?.append(viewModel)
 				}
 			}
-			if countLoadedNews < strongSelf.limit {
+
+			if countLoadedNews != strongSelf.limit {
 				strongSelf.listFulfilled = true
 			}
+
 			strongSelf.currentPage = strongSelf.currentPage + 1
 			DispatchQueue.main.async {
 				if let newsViewModel = strongSelf.newsViewModel {
 					strongSelf.view!.setViewModel(viewModels: newsViewModel)
+				}
+				if strongSelf.listFulfilled == false {
+					let indicatorCell = IndicatorViewCell()
+					strongSelf.appendViewModel(viewModel: indicatorCell)
 				}
 			}
 		}, errorCallback: { (error: Error) in
