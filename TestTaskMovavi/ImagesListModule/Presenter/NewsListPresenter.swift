@@ -27,13 +27,8 @@ class NewsListPresenter: NewsListViewOutput {
 	}
 
 	func nextPageIndicatorShowed() {
-		if listFulfilled == true {
-			newsViewModel?.removeLast()
-		}
-		else {
-			newsViewModel?.append(IndicatorViewCell())
-			loadNews()
-		}
+		newsViewModel?.append(IndicatorViewCell())
+		loadNews()
 	}
 
 	func loadNews() {
