@@ -39,30 +39,40 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 	func parseData(page: Int, limit: Int) -> [NewsElementModel]? {
 		self.page = page
 		self.limit = limit
-		let xmlParser = XMLParser()
-		xmlParser.delegate = self
+		currentElement = 0
 		endElement = (page + 1) * limit
 		startElement = page * limit
+
+		let xmlParser = XMLParser()
+		xmlParser.delegate = self
 		xmlParser.parse()
+
 		return posts
 	}
 
 	//MARK: - XMLParserDelegate
 
 	var urlImage: String?
-	func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName: String?, attributes: [String : String]) {
+	func parser(_ parser: XMLParser,
+				didStartElement elementName: String,
+				namespaceURI: String?,
+				qualifiedName qName: String?,
+				attributes attributeDict: [String : String] = [:]) {
 		tempElement = elementName
 		if elementName == "item" {
 			tempNewsElementModel = NewsElementModel(title: "", url: "")
 		}
 		if elementName == "enclosure" {
-			if let urlString = attributes["url"] {
+			if let urlString = attributeDict["url"] {
 				tempNewsElementModel?.url = urlString
 			}
 		}
 	}
 
-	func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName: String?) {
+	func parser(_ parser: XMLParser,
+				didEndElement elementName: String,
+				namespaceURI: String?,
+				qualifiedName qName: String?) {
 		if elementName == "item" {
 			if let post = tempNewsElementModel, currentElement < endElement,
 			   currentElement >= startElement {
@@ -71,9 +81,6 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 			currentElement = currentElement + 1
 			tempNewsElementModel = nil
 			if currentElement > endElement {
-				page = page + 1
-				currentElement = 0
-
 				parser.abortParsing()
 			}
 		}
@@ -86,6 +93,10 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 			}
 		}
 	}
+
+	func parser(parser: XMLParser, parseErrorOccurred parseError: NSError) {
+			NSLog("failure error: %@", parseError)
+		}
 
 	func parserDidEndDocument(_ parser: XMLParser) {
 

@@ -25,7 +25,8 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	@IBOutlet var tableView: UITableView?
 	var output: NewsListViewOutput?
 	var newsViewModels: [AnyObject]?
-	
+	var indicatorCellVisibleForTheFirstTime = true
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.tableView?.delegate = self
@@ -37,10 +38,9 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	func reloadData() {
 		self.tableView?.reloadData()
 	}
-	
-
 
 	func setViewModel(viewModels:[AnyObject]) {
+		self.indicatorCellVisibleForTheFirstTime = true
 		self.newsViewModels = viewModels
 		self.tableView?.reloadData()
 	}
@@ -68,9 +68,9 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	func tableView(_ tableView: UITableView,
 				   willDisplay cell: UITableViewCell,
 				   forRowAt indexPath: IndexPath) {
-		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0 {
-			if cell is IndicatorViewCell {
-
+		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0  {
+			if cell is IndicatorViewCell, indicatorCellVisibleForTheFirstTime == true {
+				indicatorCellVisibleForTheFirstTime = false
 				output?.nextPageIndicatorShowed()
 			}
 		}
@@ -82,17 +82,6 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return newsViewModels?.count ?? 0
-	}
-
-	//MARK: UISearchBarDelegate
-	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-		if let text = searchBar.text, text != "" {
-		}
-		searchBar.endEditing(true)
-	}
-
-	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-		searchBar.endEditing(true)
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

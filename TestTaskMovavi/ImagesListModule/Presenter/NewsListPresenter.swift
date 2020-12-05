@@ -37,11 +37,11 @@ class NewsListPresenter: NewsListViewOutput {
 	}
 
 	func loadNews() {
-		newsAPIService?.getNews(page: currentPage + 1, limit: limit, successCallback: { [weak self] (data:[NewsElementModel]?) -> ()  in
+		newsAPIService?.getNews(page: currentPage, limit: limit, successCallback: { [weak self] (data:[NewsElementModel]?) -> ()  in
+			var countLoadedNews = 0
 			guard let strongSelf = self else {
 				return
 			}
-			var countLoadedNews = 0
 			if strongSelf.currentPage > 0 {
 				strongSelf.newsViewModel?.removeLast()
 			}
@@ -52,10 +52,10 @@ class NewsListPresenter: NewsListViewOutput {
 					strongSelf.newsViewModel?.append(viewModel)
 				}
 			}
-			strongSelf.currentPage = strongSelf.currentPage + 1
-			if countLoadedNews + 1 < strongSelf.limit * strongSelf.currentPage {
+			if countLoadedNews < strongSelf.limit {
 				strongSelf.listFulfilled = true
 			}
+			strongSelf.currentPage = strongSelf.currentPage + 1
 			DispatchQueue.main.async {
 				if let newsViewModel = strongSelf.newsViewModel {
 					strongSelf.view!.setViewModel(viewModels: newsViewModel)
