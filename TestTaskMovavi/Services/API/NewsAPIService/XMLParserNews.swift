@@ -95,7 +95,7 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 		}
 	}
 
-	func parser(parser: XMLParser, parseErrorOccurred parseError: NSError) {
+	private func parser(parser: XMLParser, parseErrorOccurred parseError: NSError) {
 			NSLog("failure error: %@", parseError)
 		}
 
