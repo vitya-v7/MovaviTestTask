@@ -85,25 +85,35 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="ghH-fA-oWc">
-                                <rect key="frame" x="0.0" y="432" width="320" height="48"/>
-                                <color key="backgroundColor" systemColor="systemGray4Color"/>
-                                <color key="pageIndicatorTintColor" systemColor="systemTealColor"/>
-                                <color key="currentPageIndicatorTintColor" systemColor="systemRedColor"/>
-                            </pageControl>
+                            <tabBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zCX-7g-h9w">
+                                <rect key="frame" x="0.0" y="432" width="320" height="49"/>
+                                <items>
+                                    <tabBarItem title="Original" image="pencil" catalog="system" id="G2j-Ik-Yx3">
+                                        <color key="badgeColor" systemColor="systemTealColor"/>
+                                    </tabBarItem>
+                                    <tabBarItem title="Sepia" image="scribble" catalog="system" id="2gK-Fz-vcu">
+                                        <color key="badgeColor" systemColor="systemOrangeColor"/>
+                                    </tabBarItem>
+                                    <tabBarItem title="Black and white" image="pencil.circle.fill" catalog="system" id="zkD-d7-80A">
+                                        <color key="badgeColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tabBarItem>
+                                </items>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="selectedImageTintColor" systemColor="systemGray4Color"/>
+                            </tabBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Al4-m4-VPT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="zCX-7g-h9w" firstAttribute="top" secondItem="lyg-6W-xkr" secondAttribute="bottom" id="39R-mv-cZm"/>
                             <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="lyg-6W-xkr" secondAttribute="trailing" id="HST-1g-mQB"/>
-                            <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="ghH-fA-oWc" secondAttribute="trailing" id="QnW-Qr-HAC"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="XD2-4p-mUQ"/>
-                            <constraint firstItem="Al4-m4-VPT" firstAttribute="bottom" secondItem="ghH-fA-oWc" secondAttribute="bottom" id="jKu-wy-gI7"/>
-                            <constraint firstItem="ghH-fA-oWc" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="mB0-ZZ-yc6"/>
+                            <constraint firstItem="zCX-7g-h9w" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="XWn-j0-XdZ"/>
+                            <constraint firstItem="zCX-7g-h9w" firstAttribute="bottom" secondItem="Al4-m4-VPT" secondAttribute="bottom" constant="1" id="c69-0M-qWe"/>
+                            <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="zCX-7g-h9w" secondAttribute="trailing" id="fgo-nb-HJw"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="centerX" secondItem="Al4-m4-VPT" secondAttribute="centerX" id="nET-yG-c50"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="top" secondItem="Al4-m4-VPT" secondAttribute="top" id="pwn-Kx-F0w"/>
-                            <constraint firstItem="ghH-fA-oWc" firstAttribute="height" secondItem="E2e-im-V4p" secondAttribute="height" multiplier="0.1" id="q9U-xi-zef"/>
-                            <constraint firstItem="ghH-fA-oWc" firstAttribute="top" secondItem="lyg-6W-xkr" secondAttribute="bottom" id="rg4-gw-c1q"/>
                             <constraint firstItem="qml-m5-C3g" firstAttribute="centerY" secondItem="Al4-m4-VPT" secondAttribute="centerY" id="xJj-Gr-J89"/>
                             <constraint firstItem="qml-m5-C3g" firstAttribute="centerX" secondItem="Al4-m4-VPT" secondAttribute="centerX" id="xXD-3l-hpT"/>
                         </constraints>
@@ -119,14 +129,17 @@
         </scene>
     </scenes>
     <resources>
+        <image name="pencil" catalog="system" width="128" height="113"/>
+        <image name="pencil.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="scribble" catalog="system" width="128" height="118"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray4Color">
             <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
             <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
