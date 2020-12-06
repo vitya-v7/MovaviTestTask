@@ -10,12 +10,14 @@ import UIKit
 
 protocol NewsListViewInput : UIViewController {
 	func setInitialState()
-	func setViewModels(viewModels: [ViewModelInterface])
+	func setViewModel(viewModels: [ViewModelInterface])
+	func appendViewModel(viewModel: ViewModelInterface)
 }
 
 protocol NewsListViewOutput {
 	func viewDidLoadDone()
-    func cellWillShow(index: Int)
+	func loadNews()
+	func nextPageIndicatorShowed()
 }
 
 class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
@@ -24,6 +26,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	@IBOutlet var tableView: UITableView?
 	var output: NewsListViewOutput?
 	var newsViewModels: [ViewModelInterface]?
+	var indicatorCellVisibleForTheFirstTime = true
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -36,21 +39,36 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	func reloadData() {
 		self.tableView?.reloadData()
 	}
+	
 
-	func setViewModels(viewModels:[ViewModelInterface]) {
+
+	func setViewModel(viewModels:[ViewModelInterface]) {
+		self.indicatorCellVisibleForTheFirstTime = true
 		self.newsViewModels = viewModels
 		self.tableView?.reloadData()
 	}
 
+	func appendViewModel(viewModel: ViewModelInterface) {
+		print("dasd")
+		self.newsViewModels?.append(viewModel)
+		self.tableView?.reloadData()
+	}
+
 	func setInitialState() {
-        // do nothing
+		//	self.searchBar?.returnKeyType = .done
 	}
 	
-	/*func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		/*if tableView.cellForRow(at: indexPath)?.reuseIdentifier == ImagesElementCell.reuseIdentifier {
+			return Constants.heightForNewsCell
+		}
+		if tableView.cellForRow(at: indexPath)?.reuseIdentifier == IndicatorViewCell.reuseIdentifier {
+			return Constants.heightForActivityIndicatorCell
+		}*/
 		return 100
-	}*/
+	}
 	
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = newsViewModels![indexPath.row]
         let viewModelCellIdentifier = viewModel.cellIdentifier()
 
@@ -62,12 +80,17 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
             let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! IndicatorViewCell
             return cell
         }
-	}
+    }
 
 	func tableView(_ tableView: UITableView,
 				   willDisplay cell: UITableViewCell,
 				   forRowAt indexPath: IndexPath) {
-        output?.cellWillShow(index: indexPath.row)
+		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0  {
+			if cell is IndicatorViewCell, indicatorCellVisibleForTheFirstTime == true {
+				indicatorCellVisibleForTheFirstTime = false
+				output?.nextPageIndicatorShowed()
+			}
+		}
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {

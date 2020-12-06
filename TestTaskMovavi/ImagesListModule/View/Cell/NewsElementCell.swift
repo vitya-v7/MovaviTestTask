@@ -51,7 +51,7 @@ class NewsElementCell: UITableViewCell {
 				}
 			} else {
 				strongSelf.smallImage.image = nil
-				print("Error loading image")
+				print("Error loading image");
 			}
 		}
 	}

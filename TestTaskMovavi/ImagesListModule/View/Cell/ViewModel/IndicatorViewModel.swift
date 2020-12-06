@@ -9,7 +9,6 @@
 import Foundation
 
 class IndicatorViewModel: ViewModelInterface {
-    
     func cellIdentifier() -> String {
         return "ActivityCellIdentifier"
     }

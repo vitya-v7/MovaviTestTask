@@ -8,7 +8,7 @@
 
 import Foundation
 
-// this class contains behavior to simulate pagination logic
+
 
 class XMLParserNews: NSObject, XMLParserDelegate {
 	
@@ -74,7 +74,6 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 				didEndElement elementName: String,
 				namespaceURI: String?,
 				qualifiedName qName: String?) {
-        // hardcoded simulation of pagination logic
 		if elementName == "item" {
 			if let post = tempNewsElementModel, currentElement < endElement,
 			   currentElement >= startElement {
@@ -96,7 +95,7 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 		}
 	}
 
-    private func parser(parser: XMLParser, parseErrorOccurred parseError: NSError) {
+	func parser(parser: XMLParser, parseErrorOccurred parseError: NSError) {
 			NSLog("failure error: %@", parseError)
 		}
 

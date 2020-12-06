@@ -12,6 +12,6 @@ import UIKit
 struct Constants {
 	static public let newsPerPage = 20
 	static public let heightForNewsCell: CGFloat = 200
-	static public let heightForActivityIndicatorCell: CGFloat = 50
+	static public let heightForActivityIndicatorCell: CGFloat = 200
 }
 
