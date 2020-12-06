@@ -10,15 +10,12 @@ import UIKit
 
 protocol NewsListViewInput : UIViewController {
 	func setInitialState()
-	func setViewModel(viewModels: [AnyObject])
-	func appendViewModel(viewModel: AnyObject)
-	func removeLastViewModel()
+	func setViewModels(viewModels: [ViewModelInterface])
 }
 
 protocol NewsListViewOutput {
 	func viewDidLoadDone()
-	func loadNews()
-	func nextPageIndicatorShowed()
+    func cellWillShow(index: Int)
 }
 
 class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
@@ -26,8 +23,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
 	@IBOutlet var tableView: UITableView?
 	var output: NewsListViewOutput?
-	var newsViewModels: [AnyObject]?
-	var indicatorCellVisibleForTheFirstTime = true
+	var newsViewModels: [ViewModelInterface]?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -40,66 +36,38 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	func reloadData() {
 		self.tableView?.reloadData()
 	}
-	
 
-
-	func setViewModel(viewModels:[AnyObject]) {
-		self.indicatorCellVisibleForTheFirstTime = true
+	func setViewModels(viewModels:[ViewModelInterface]) {
 		self.newsViewModels = viewModels
 		self.tableView?.reloadData()
 	}
 
-	func appendViewModel(viewModel: AnyObject) {
-		print("dasd")
-		self.newsViewModels?.append(viewModel)
-		self.tableView?.reloadData()
-	}
-
-	func removeLastViewModel() {
-
-		//self.tableView?.beginUpdates()
-		self.newsViewModels?.removeLast()
-		self.tableView?.deleteRows(at: [IndexPath.init(row: self.newsViewModels!.count, section: 0)], with: .fade)
-		//self.tableView?.endUpdates()
-		self.tableView?.reloadData()
-	}
-
 	func setInitialState() {
-		//	self.searchBar?.returnKeyType = .done
+        // do nothing
 	}
 	
-	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		/*if tableView.cellForRow(at: indexPath)?.reuseIdentifier == ImagesElementCell.reuseIdentifier {
-			return Constants.heightForNewsCell
-		}
-		if tableView.cellForRow(at: indexPath)?.reuseIdentifier == IndicatorViewCell.reuseIdentifier {
-			return Constants.heightForActivityIndicatorCell
-		}*/
+	/*func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return 100
-	}
+	}*/
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let viewModel = newsViewModels![indexPath.row]
+        let viewModelCellIdentifier = viewModel.cellIdentifier()
 
-		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row > 0 {
-			let cell = tableView.dequeueReusableCell(withIdentifier: IndicatorViewCell.reuseIdentifier) as! IndicatorViewCell
-			return cell
-		}
-		else {
-			let cell = tableView.dequeueReusableCell(withIdentifier: NewsElementCell.reuseIdentifier) as! NewsElementCell
-			cell.configureCell(withObject: newsViewModels![indexPath.row] as! NewsElementViewModel)
-			return cell
-		}
+        if viewModelCellIdentifier == NewsElementCellConstant {
+            let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! NewsElementCell
+            cell.configureCell(withObject: viewModel as! NewsElementViewModel)
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! IndicatorViewCell
+            return cell
+        }
 	}
 
 	func tableView(_ tableView: UITableView,
 				   willDisplay cell: UITableViewCell,
 				   forRowAt indexPath: IndexPath) {
-		if indexPath.row % Constants.newsPerPage == 0 && indexPath.row != 0  {
-			if cell is IndicatorViewCell, indicatorCellVisibleForTheFirstTime == true {
-				indicatorCellVisibleForTheFirstTime = false
-				output?.nextPageIndicatorShowed()
-			}
-		}
+        output?.cellWillShow(index: indexPath.row)
 	}
 
 	func numberOfSections(in tableView: UITableView) -> Int {

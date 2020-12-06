@@ -14,7 +14,7 @@ class NewsElementCell: UITableViewCell {
 	@IBOutlet weak var title: UILabel!
 	
 	var viewModel: NewsElementViewModel?
-	static let reuseIdentifier = "NewsElementCellIdentifier"
+    
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		// Initialization code
@@ -51,7 +51,7 @@ class NewsElementCell: UITableViewCell {
 				}
 			} else {
 				strongSelf.smallImage.image = nil
-				print("Error loading image");
+				print("Error loading image")
 			}
 		}
 	}

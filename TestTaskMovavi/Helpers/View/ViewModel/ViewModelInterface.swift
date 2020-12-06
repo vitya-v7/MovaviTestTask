@@ -1,5 +1,5 @@
 //
-//  NewsElementModel.swift
+//  ViewModelInterface.swift
 //  TestTaskMovavi
 //
 //  Created by Admin on 04.12.2020.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct NewsElementModel {
-	public var title: String!
-	public var url: String!
+protocol ViewModelInterface {
+
+    func cellIdentifier() -> String
+
 }

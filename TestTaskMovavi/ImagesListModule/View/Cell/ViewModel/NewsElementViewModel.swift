@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewsElementViewModel {
+class NewsElementViewModel: ViewModelInterface {
 	var title: String?
 	var imageURL: String?
 
@@ -16,4 +16,8 @@ class NewsElementViewModel {
 		self.title = model.title
 		self.imageURL = model.url
 	}
+
+    func cellIdentifier() -> String {
+        return "NewsElementCellIdentifier"
+    }
 }

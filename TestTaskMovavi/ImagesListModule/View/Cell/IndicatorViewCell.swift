@@ -13,7 +13,7 @@ class IndicatorViewCell: UITableViewCell {
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
 
 	var viewModel: IndicatorViewModel?
-	static let reuseIdentifier = "ActivityCellIdentifier"
+    
     override func awakeFromNib() {
         super.awakeFromNib()
 		activityIndicator?.startAnimating()
