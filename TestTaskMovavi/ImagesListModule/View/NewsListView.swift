@@ -39,8 +39,6 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	func reloadData() {
 		self.tableView?.reloadData()
 	}
-	
-
 
 	func setViewModel(viewModels:[ViewModelInterface]) {
 		self.indicatorCellVisibleForTheFirstTime = true
@@ -49,7 +47,6 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 
 	func appendViewModel(viewModel: ViewModelInterface) {
-		print("dasd")
 		self.newsViewModels?.append(viewModel)
 		self.tableView?.reloadData()
 	}

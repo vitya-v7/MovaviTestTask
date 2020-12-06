@@ -176,12 +176,28 @@
 		8480A00B257D715F0092E2FE /* Operations */ = {
 			isa = PBXGroup;
 			children = (
-				8480A00C257D71770092E2FE /* PendingOperations.swift */,
-				8480A010257D72960092E2FE /* PhotoRecord.swift */,
+				8480A01B257D74810092E2FE /* OperationManager */,
+				8480A01A257D746E0092E2FE /* Model */,
 				8480A014257D73650092E2FE /* ImageFiltrationOperation.swift */,
 				8480A017257D73B30092E2FE /* ImageDownloaderOperation.swift */,
 			);
 			path = Operations;
+			sourceTree = "<group>";
+		};
+		8480A01A257D746E0092E2FE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8480A010257D72960092E2FE /* PhotoRecord.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		8480A01B257D74810092E2FE /* OperationManager */ = {
+			isa = PBXGroup;
+			children = (
+				8480A00C257D71770092E2FE /* PendingOperations.swift */,
+			);
+			path = OperationManager;
 			sourceTree = "<group>";
 		};
 		8494262424E8DDD700B1F680 = {
