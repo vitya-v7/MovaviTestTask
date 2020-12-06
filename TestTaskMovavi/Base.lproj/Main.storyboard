@@ -91,10 +91,10 @@
                                     <tabBarItem title="Original" image="pencil" catalog="system" id="G2j-Ik-Yx3">
                                         <color key="badgeColor" systemColor="systemTealColor"/>
                                     </tabBarItem>
-                                    <tabBarItem title="Sepia" image="scribble" catalog="system" id="2gK-Fz-vcu">
+                                    <tabBarItem tag="1" title="Sepia" image="scribble" catalog="system" id="2gK-Fz-vcu">
                                         <color key="badgeColor" systemColor="systemOrangeColor"/>
                                     </tabBarItem>
-                                    <tabBarItem title="Black and white" image="pencil.circle.fill" catalog="system" id="zkD-d7-80A">
+                                    <tabBarItem tag="2" title="Black and white" image="pencil.circle.fill" catalog="system" id="zkD-d7-80A">
                                         <color key="badgeColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tabBarItem>
                                 </items>
