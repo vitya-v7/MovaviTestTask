@@ -13,7 +13,7 @@ class NewsListPresenter: NewsListViewOutput {
 
 	var newsAPIService: NewsAPIService?
 	var view: NewsListViewInput?
-	var newsViewModel: [ViewModelInterface]?
+	var newsViewModels: [ViewModelInterface]?
 	var currentPage = 0
 	var limit = Constants.newsPerPage
 	var listFulfilled = false
@@ -23,23 +23,39 @@ class NewsListPresenter: NewsListViewOutput {
 
 	func viewDidLoadDone() {
 
-		newsViewModel = [ViewModelInterface]()
+		newsViewModels = [ViewModelInterface]()
 		loadNews()
 		view?.setInitialState()
 	}
 
+	func changeModeOfAllViewModels(mode: NewsElementViewModel.ImageState) {
+		if self.newsViewModels != nil {
+			for i in 0 ..< self.newsViewModels!.count {
+				self.newsViewModels![i].mode = mode
+			}
+		}
+		DispatchQueue.main.async { [weak self] in
+			guard let strongSelf = self else {
+				return
+			}
+			if let newsViewModel = strongSelf.newsViewModels {
+				strongSelf.view!.setViewModel(viewModels: newsViewModel)
+			}
+		}
+	}
+	
 	func nextPageIndicatorShowed() {
 		if listFulfilled == false {
 			loadNews()
 		}
 		else {
 			DispatchQueue.main.async {
-				self.newsViewModel?.removeLast()
+				self.newsViewModels?.removeLast()
 				DispatchQueue.main.async { [weak self] in
 					guard let strongSelf = self else {
 						return
 					}
-					if let newsViewModel = strongSelf.newsViewModel {
+					if let newsViewModel = strongSelf.newsViewModels {
 						strongSelf.view!.setViewModel(viewModels: newsViewModel)
 					}
 				}
@@ -55,7 +71,7 @@ class NewsListPresenter: NewsListViewOutput {
 			}
 
 			if strongSelf.firstLoad == false {
-				strongSelf.newsViewModel?.removeLast()
+				strongSelf.newsViewModels?.removeLast()
 			}
 			strongSelf.firstLoad = false
 
@@ -63,7 +79,7 @@ class NewsListPresenter: NewsListViewOutput {
 				for model in dataIn {
 					let viewModel = NewsElementViewModel.init(withElementModel: model)
 					countLoadedNews = countLoadedNews + 1
-					strongSelf.newsViewModel?.append(viewModel)
+					strongSelf.newsViewModels?.append(viewModel)
 				}
 			}
 
@@ -75,12 +91,12 @@ class NewsListPresenter: NewsListViewOutput {
 
 			if strongSelf.listFulfilled == false {
 				let indicatorModel = IndicatorViewModel()
-				strongSelf.newsViewModel?.append(indicatorModel)
+				strongSelf.newsViewModels?.append(indicatorModel)
 				
 			}
 
 			DispatchQueue.main.async {
-				if let newsViewModel = strongSelf.newsViewModel {
+				if let newsViewModel = strongSelf.newsViewModels {
 					
 					strongSelf.view!.setViewModel(viewModels: newsViewModel)
 				}

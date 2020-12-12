@@ -11,5 +11,5 @@ import Foundation
 protocol ViewModelInterface {
 
     func cellIdentifier() -> String
-
+	var mode: NewsElementViewModel.ImageState { get set }
 }

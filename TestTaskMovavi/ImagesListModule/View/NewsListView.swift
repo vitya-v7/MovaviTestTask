@@ -18,6 +18,7 @@ protocol NewsListViewOutput {
 	func viewDidLoadDone()
 	func loadNews()
 	func nextPageIndicatorShowed()
+	func changeModeOfAllViewModels(mode: NewsElementViewModel.ImageState)
 }
 
 class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UIScrollViewDelegate{
@@ -27,22 +28,27 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 
 
 	@IBAction func originalModeButton(_ sender: UIBarButtonItem) {
+		output?.changeModeOfAllViewModels(mode: .normal)
 	}
+
 
 	@IBAction func sepiaModeButton(_ sender: UIBarButtonItem) {
-
+		output?.changeModeOfAllViewModels(mode: .sepia)
 	}
 
-	@IBAction func BlackWhiteModeButton(_ sender: Any) {
-
+	@IBAction func blackWhiteModeButton(_ sender: Any) {
+		output?.changeModeOfAllViewModels(mode: .blackAndWhite)
 	}
+
+
 
 	var output: NewsListViewOutput?
-	var newsViewModels: [ViewModelInterface]?
+	var newsViewModels = [ViewModelInterface]()
 	var indicatorCellVisibleForTheFirstTime = true
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
 		self.tableView?.delegate = self
 		self.tableView?.dataSource = self
 		output?.viewDidLoadDone()
@@ -60,7 +66,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 
 	func appendViewModel(viewModel: ViewModelInterface) {
-		self.newsViewModels?.append(viewModel)
+		self.newsViewModels.append(viewModel)
 		self.tableView?.reloadData()
 	}
 
@@ -70,27 +76,27 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		/*if tableView?.cellForRow(at: indexPath)?.reuseIdentifier == ImagesElementCell.reuseIdentifier {
-			return Constants.heightForNewsCell
+		return Constants.heightForNewsCell
 		}
 		if tableView?.cellForRow(at: indexPath)?.reuseIdentifier == IndicatorViewCell.reuseIdentifier {
-			return Constants.heightForActivityIndicatorCell
+		return Constants.heightForActivityIndicatorCell
 		}*/
 		return 100
 	}
 	
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let viewModel = newsViewModels![indexPath.row]
-        let viewModelCellIdentifier = viewModel.cellIdentifier()
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let viewModel = newsViewModels[indexPath.row]
+		let viewModelCellIdentifier = viewModel.cellIdentifier()
 
-        if viewModelCellIdentifier == NewsElementCellConstant {
-            let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! NewsElementCell
+		if viewModelCellIdentifier == NewsElementCellConstant {
+			let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! NewsElementCell
 			cell.configureCell(withObject: viewModel as! NewsElementViewModel, indexPath: indexPath)
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! IndicatorViewCell
-            return cell
-        }
-    }
+			return cell
+		} else {
+			let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! IndicatorViewCell
+			return cell
+		}
+	}
 
 	func tableView(_ tableView: UITableView,
 				   willDisplay cell: UITableViewCell,
@@ -108,7 +114,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return newsViewModels?.count ?? 0
+		return newsViewModels.count
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -126,22 +132,22 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 
 
 	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-	  //1
-	  suspendAllOperations()
+		//1
+		suspendAllOperations()
 	}
 
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-	  // 2
-	  if !decelerate {
-		loadImagesForOnscreenCells()
-		resumeAllOperations()
-	  }
+		// 2
+		if !decelerate {
+			loadImagesForOnscreenCells()
+			resumeAllOperations()
+		}
 	}
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-	  // 3
-	  loadImagesForOnscreenCells()
-	  resumeAllOperations()
+		// 3
+		loadImagesForOnscreenCells()
+		resumeAllOperations()
 	}
 
 
@@ -150,39 +156,39 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 
 
 	func loadImagesForOnscreenCells() {
-	  //1
-	  if let pathsArray = tableView?.indexPathsForVisibleRows {
-		//2
-		var allPendingOperations = Set(pendingOperations.downloadsInProgress.keys)
-		allPendingOperations.formUnion(pendingOperations.filtrationsInProgress.keys)
+		//1
+		if let pathsArray = tableView?.indexPathsForVisibleRows {
+			//2
+			var allPendingOperations = Set(pendingOperations.downloadsInProgress.keys)
+			allPendingOperations.formUnion(pendingOperations.filtrationsInProgress.keys)
 
-		//3
-		var toBeCancelled = allPendingOperations
-		let visiblePaths = Set(pathsArray)
-		toBeCancelled.subtract(visiblePaths)
+			//3
+			var toBeCancelled = allPendingOperations
+			let visiblePaths = Set(pathsArray)
+			toBeCancelled.subtract(visiblePaths)
 
-		//4
-		var toBeStarted = visiblePaths
-		toBeStarted.subtract(allPendingOperations)
+			//4
+			var toBeStarted = visiblePaths
+			toBeStarted.subtract(allPendingOperations)
 
-		// 5
-		for indexPath in toBeCancelled {
-		  if let pendingDownload = pendingOperations.downloadsInProgress[indexPath] {
-			pendingDownload.cancel()
-		  }
-		  pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
-		  if let pendingFiltration = pendingOperations.filtrationsInProgress[indexPath] {
-			pendingFiltration.cancel()
-		  }
-		  pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
+			// 5
+			for indexPath in toBeCancelled {
+				if let pendingDownload = pendingOperations.downloadsInProgress[indexPath] {
+					pendingDownload.cancel()
+				}
+				pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
+				if let pendingFiltration = pendingOperations.filtrationsInProgress[indexPath] {
+					pendingFiltration.cancel()
+				}
+				pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
+			}
+
+			// 6
+			for indexPath in toBeStarted {
+				let recordToProcess = (newsViewModels as! [NewsElementViewModel])[indexPath.row]
+				startOperations(for: recordToProcess, at: indexPath)
+			}
 		}
-
-		// 6
-		for indexPath in toBeStarted {
-			let recordToProcess = (newsViewModels as! [NewsElementViewModel])[indexPath.row]
-		  startOperations(for: recordToProcess, at: indexPath)
-		}
-	  }
 	}
 
 }

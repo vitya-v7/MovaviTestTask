@@ -102,7 +102,7 @@
                                     <barButtonItem systemItem="flexibleSpace" id="CsD-Pg-Exx"/>
                                     <barButtonItem title="Black/White" id="uQY-wg-fhN">
                                         <connections>
-                                            <action selector="BlackWhiteModeButton:" destination="sJC-k8-5nh" id="AjP-sg-GKL"/>
+                                            <action selector="blackWhiteModeButton:" destination="sJC-k8-5nh" id="qe4-Co-giq"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
