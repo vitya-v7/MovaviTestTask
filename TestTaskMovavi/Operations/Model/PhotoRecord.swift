@@ -11,7 +11,7 @@ import UIKit
 
 //MARK: - PhotoRecord Model
 
-enum PhotoRecordState {
+public enum PhotoRecordState {
 	case new, downloaded, filtered, failed
 }
 

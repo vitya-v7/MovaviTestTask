@@ -20,14 +20,14 @@ protocol NewsListViewOutput {
 	func nextPageIndicatorShowed()
 }
 
-class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
+class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UIScrollViewDelegate{
 
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
 	@IBOutlet var tableView: UITableView?
 	var output: NewsListViewOutput?
 	var newsViewModels: [ViewModelInterface]?
 	var indicatorCellVisibleForTheFirstTime = true
-
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.tableView?.delegate = self
@@ -56,10 +56,10 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		/*if tableView.cellForRow(at: indexPath)?.reuseIdentifier == ImagesElementCell.reuseIdentifier {
+		/*if tableView?.cellForRow(at: indexPath)?.reuseIdentifier == ImagesElementCell.reuseIdentifier {
 			return Constants.heightForNewsCell
 		}
-		if tableView.cellForRow(at: indexPath)?.reuseIdentifier == IndicatorViewCell.reuseIdentifier {
+		if tableView?.cellForRow(at: indexPath)?.reuseIdentifier == IndicatorViewCell.reuseIdentifier {
 			return Constants.heightForActivityIndicatorCell
 		}*/
 		return 100
@@ -71,7 +71,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 
         if viewModelCellIdentifier == NewsElementCellConstant {
             let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! NewsElementCell
-            cell.configureCell(withObject: viewModel as! NewsElementViewModel)
+			cell.configureCell(withObject: viewModel as! NewsElementViewModel, indexPath: indexPath)
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! IndicatorViewCell
@@ -109,6 +109,67 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 			tableView.backgroundColor = .white
 			cell.smallImage.backgroundColor = cell.backgroundColor
 		}
+	}
+
+
+	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+	  //1
+	  suspendAllOperations()
+	}
+
+	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+	  // 2
+	  if !decelerate {
+		loadImagesForOnscreenCells()
+		resumeAllOperations()
+	  }
+	}
+
+	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+	  // 3
+	  loadImagesForOnscreenCells()
+	  resumeAllOperations()
+	}
+
+
+
+
+
+
+	func loadImagesForOnscreenCells() {
+	  //1
+	  if let pathsArray = tableView?.indexPathsForVisibleRows {
+		//2
+		var allPendingOperations = Set(pendingOperations.downloadsInProgress.keys)
+		allPendingOperations.formUnion(pendingOperations.filtrationsInProgress.keys)
+
+		//3
+		var toBeCancelled = allPendingOperations
+		let visiblePaths = Set(pathsArray)
+		toBeCancelled.subtract(visiblePaths)
+
+		//4
+		var toBeStarted = visiblePaths
+		toBeStarted.subtract(allPendingOperations)
+
+		// 5
+		for indexPath in toBeCancelled {
+		  if let pendingDownload = pendingOperations.downloadsInProgress[indexPath] {
+			pendingDownload.cancel()
+		  }
+		  pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
+		  if let pendingFiltration = pendingOperations.filtrationsInProgress[indexPath] {
+			pendingFiltration.cancel()
+		  }
+		  pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
+		}
+
+		// 6
+		for indexPath in toBeStarted {
+			let recordToProcess = (newsViewModels as! [NewsElementViewModel])[indexPath.row]
+		  startOperations(for: recordToProcess, at: indexPath)
+		}
+	  }
 	}
 
 }

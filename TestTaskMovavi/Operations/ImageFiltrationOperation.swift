@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 
 class ImageFiltration: Operation {
-	let photoRecord: PhotoRecord
 
-	init(_ photoRecord: PhotoRecord) {
-		self.photoRecord = photoRecord
+	var image: UIImage
+	init(_ image: UIImage) {
+		self.image = image
 	}
 
 	override func main () {
@@ -21,14 +21,12 @@ class ImageFiltration: Operation {
 			return
 		}
 
-		guard self.photoRecord.state == .downloaded else {
+		/*guard self.photoRecord.state == .downloaded else {
 			return
-		}
+		}*/
 
-		if let image = photoRecord.image,
-		   let filteredImage = applySepiaFilter(image) {
-			photoRecord.image = filteredImage
-			photoRecord.state = .filtered
+		if let filteredImage = applySepiaFilter(image) {
+			self.image = filteredImage
 		}
 	}
 

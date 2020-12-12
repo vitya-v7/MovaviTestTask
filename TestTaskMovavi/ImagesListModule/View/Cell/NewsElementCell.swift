@@ -14,9 +14,10 @@ class NewsElementCell: UITableViewCell {
 	@IBOutlet weak var title: UILabel!
 	
 	var viewModel: NewsElementViewModel?
-    
+	var imageService: OperationImageAPIService?
 	override func awakeFromNib() {
 		super.awakeFromNib()
+
 		// Initialization code
 	}
 
@@ -25,9 +26,24 @@ class NewsElementCell: UITableViewCell {
 		self.smallImage.backgroundColor = UIColor.lightGray
 		self.smallImage.image = nil
 	}
-	
-	func configureCell(withObject object: NewsElementViewModel) {
+
+
+
+
+
+	func configureCell(withObject object: NewsElementViewModel, indexPath: IndexPath) {
 		viewModel = object
+		guard let stringURL = viewModel!.imageURL else { return }
+		let urlImage = URL.init(string: stringURL)
+		if let urlImage = urlImage {
+			imageService = OperationImageAPIService.init(imageURL: urlImage)
+		}
+		imageService?.startOperations(for: object, at: indexPath, successCallback: { [weak self] (image: UIImage?) in
+			guard let strongSelf = self else {
+				return
+			}
+			strongSelf.smallImage.image = image
+		})
 		setImageToImageView(urlString: object.imageURL!)
 		self.title!.text = object.title!
 	}

@@ -11,7 +11,7 @@ import UIKit
 
 //MARK: - ManagingOperations
 
-class PendingOperations {
+public class PendingOperations {
 	lazy var downloadsInProgress: [IndexPath: Operation] = [:]
 	lazy var downloadQueue: OperationQueue = {
 		var queue = OperationQueue()
