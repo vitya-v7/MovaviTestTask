@@ -12,7 +12,7 @@ import UIKit
 class OperationImageAPIService {
 
 
-	let pendingOperations = PendingOperations()
+	static let pendingOperations = PendingOperations()
 	let imageURL: URL
 	var image: UIImage?
 	init(imageURL: URL) {
@@ -34,12 +34,11 @@ class OperationImageAPIService {
 
 
 	func startDownload(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
-		//1
-		guard pendingOperations.downloadsInProgress[indexPath] == nil else {
+
+		guard OperationImageAPIService.pendingOperations.downloadsInProgress[indexPath] == nil else {
 			return
 		}
 
-		//2
 		let downloader = ImageDownloader(imageURL)
 
 		downloader.completionBlock = {
@@ -49,18 +48,15 @@ class OperationImageAPIService {
 		}
 
 		DispatchQueue.main.async {
-			self.pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
+			OperationImageAPIService.pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
 			//self.tableView?.reloadRows(at: [indexPath], with: .fade)
 		}
 
+		OperationImageAPIService.pendingOperations.downloadsInProgress[indexPath] = downloader
 
-		//4
-		pendingOperations.downloadsInProgress[indexPath] = downloader
+		OperationImageAPIService.pendingOperations.downloadQueue.addOperation(downloader)
 
-		//5
-		pendingOperations.downloadQueue.addOperation(downloader)
-
-		pendingOperations.downloadQueue.waitUntilAllOperationsAreFinished()
+		OperationImageAPIService.pendingOperations.downloadQueue.waitUntilAllOperationsAreFinished()
 
 		if let image = downloader.image {
 			self.image = image
@@ -74,7 +70,7 @@ class OperationImageAPIService {
 
 
 	func startFiltration(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
-		guard pendingOperations.filtrationsInProgress[indexPath] == nil else {
+		guard OperationImageAPIService.pendingOperations.filtrationsInProgress[indexPath] == nil else {
 			return
 		}
 		guard let imageIn = self.image else { return }
@@ -85,28 +81,28 @@ class OperationImageAPIService {
 			}
 
 			DispatchQueue.main.async {
-				self.pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
+				OperationImageAPIService.pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
 				//self.tableView?.reloadRows(at: [indexPath], with: .fade
 			}
 		}
 
-		pendingOperations.filtrationsInProgress[indexPath] = filterer
-		pendingOperations.filtrationQueue.addOperation(filterer)
+		OperationImageAPIService.pendingOperations.filtrationsInProgress[indexPath] = filterer
+		OperationImageAPIService.pendingOperations.filtrationQueue.addOperation(filterer)
 
-		pendingOperations.filtrationQueue.waitUntilAllOperationsAreFinished()
+		OperationImageAPIService.pendingOperations.filtrationQueue.waitUntilAllOperationsAreFinished()
 
 		successCallback(imageIn)
 	}
 
 
 	func suspendAllOperations() {
-		pendingOperations.downloadQueue.isSuspended = true
-		pendingOperations.filtrationQueue.isSuspended = true
+		OperationImageAPIService.pendingOperations.downloadQueue.isSuspended = true
+		OperationImageAPIService.pendingOperations.filtrationQueue.isSuspended = true
 	}
 
 	func resumeAllOperations() {
-		pendingOperations.downloadQueue.isSuspended = false
-		pendingOperations.filtrationQueue.isSuspended = false
+		OperationImageAPIService.pendingOperations.downloadQueue.isSuspended = false
+		OperationImageAPIService.pendingOperations.filtrationQueue.isSuspended = false
 	}
 
 }

@@ -24,6 +24,19 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
 	@IBOutlet var tableView: UITableView?
+
+
+	@IBAction func originalModeButton(_ sender: UIBarButtonItem) {
+	}
+
+	@IBAction func sepiaModeButton(_ sender: UIBarButtonItem) {
+
+	}
+
+	@IBAction func BlackWhiteModeButton(_ sender: Any) {
+
+	}
+
 	var output: NewsListViewOutput?
 	var newsViewModels: [ViewModelInterface]?
 	var indicatorCellVisibleForTheFirstTime = true

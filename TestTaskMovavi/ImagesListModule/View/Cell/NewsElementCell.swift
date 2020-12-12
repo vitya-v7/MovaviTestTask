@@ -43,11 +43,15 @@ class NewsElementCell: UITableViewCell {
 				return
 			}
 			strongSelf.smallImage.image = image
+			strongSelf.smallImage.contentMode = .scaleAspectFit
+			strongSelf.smallImage.backgroundColor = .white
 		})
-		setImageToImageView(urlString: object.imageURL!)
+		//setImageToImageView(urlString: object.imageURL!)
 		self.title!.text = object.title!
 	}
-	
+
+
+
 	func setImageToImageView(urlString: String) {
 		ImageLoader.shared.loadImage(from: urlString) { [weak self] (imageData, urlString) in
 			guard let strongSelf = self else {

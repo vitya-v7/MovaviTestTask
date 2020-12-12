@@ -22,7 +22,7 @@
                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lyg-6W-xkr">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="432"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NewsElementCellIdentifier" rowHeight="200" id="CiN-Ka-Td6" customClass="NewsElementCell" customModule="TestTaskMovavi" customModuleProvider="target">
@@ -85,33 +85,38 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <tabBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zCX-7g-h9w">
-                                <rect key="frame" x="0.0" y="432" width="320" height="49"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8rr-lO-yGb">
+                                <rect key="frame" x="0.0" y="436" width="320" height="44"/>
                                 <items>
-                                    <tabBarItem title="Original" image="pencil" catalog="system" id="G2j-Ik-Yx3">
-                                        <color key="badgeColor" systemColor="systemTealColor"/>
-                                    </tabBarItem>
-                                    <tabBarItem tag="1" title="Sepia" image="scribble" catalog="system" id="2gK-Fz-vcu">
-                                        <color key="badgeColor" systemColor="systemOrangeColor"/>
-                                    </tabBarItem>
-                                    <tabBarItem tag="2" title="Black and white" image="pencil.circle.fill" catalog="system" id="zkD-d7-80A">
-                                        <color key="badgeColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </tabBarItem>
+                                    <barButtonItem title="Original" id="N3J-eC-YoN">
+                                        <connections>
+                                            <action selector="originalModeButton:" destination="sJC-k8-5nh" id="YiY-fJ-Ifn"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="flexibleSpace" id="KzA-NX-OIH"/>
+                                    <barButtonItem title="Sepia" id="2Ct-AY-VAu">
+                                        <connections>
+                                            <action selector="sepiaModeButton:" destination="sJC-k8-5nh" id="Qcs-HN-vsG"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="flexibleSpace" id="CsD-Pg-Exx"/>
+                                    <barButtonItem title="Black/White" id="uQY-wg-fhN">
+                                        <connections>
+                                            <action selector="BlackWhiteModeButton:" destination="sJC-k8-5nh" id="AjP-sg-GKL"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
-                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="selectedImageTintColor" systemColor="systemGray4Color"/>
-                            </tabBar>
+                            </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Al4-m4-VPT"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="zCX-7g-h9w" firstAttribute="top" secondItem="lyg-6W-xkr" secondAttribute="bottom" id="39R-mv-cZm"/>
+                            <constraint firstItem="Al4-m4-VPT" firstAttribute="bottom" secondItem="8rr-lO-yGb" secondAttribute="bottom" id="0Z4-nh-BVO"/>
                             <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="lyg-6W-xkr" secondAttribute="trailing" id="HST-1g-mQB"/>
+                            <constraint firstItem="8rr-lO-yGb" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="Iv0-w3-3Mz"/>
+                            <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="8rr-lO-yGb" secondAttribute="trailing" id="Qm9-rF-xCR"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="XD2-4p-mUQ"/>
-                            <constraint firstItem="zCX-7g-h9w" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="XWn-j0-XdZ"/>
-                            <constraint firstItem="zCX-7g-h9w" firstAttribute="bottom" secondItem="Al4-m4-VPT" secondAttribute="bottom" constant="1" id="c69-0M-qWe"/>
-                            <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="zCX-7g-h9w" secondAttribute="trailing" id="fgo-nb-HJw"/>
+                            <constraint firstItem="8rr-lO-yGb" firstAttribute="bottom" secondItem="lyg-6W-xkr" secondAttribute="bottom" id="bO6-37-bwE"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="centerX" secondItem="Al4-m4-VPT" secondAttribute="centerX" id="nET-yG-c50"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="top" secondItem="Al4-m4-VPT" secondAttribute="top" id="pwn-Kx-F0w"/>
                             <constraint firstItem="qml-m5-C3g" firstAttribute="centerY" secondItem="Al4-m4-VPT" secondAttribute="centerY" id="xJj-Gr-J89"/>
@@ -129,20 +134,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="pencil" catalog="system" width="128" height="113"/>
-        <image name="pencil.circle.fill" catalog="system" width="128" height="121"/>
-        <image name="scribble" catalog="system" width="128" height="118"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemTealColor">
-            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
