@@ -38,6 +38,8 @@ class NewsElementCell: UITableViewCell {
 		if let urlImage = urlImage {
 			imageService = OperationImageAPIService.init(imageURL: urlImage)
 		}
+		self.title!.text = object.title!
+		//setImageToImageView(urlString: object.imageURL!)
 		imageService?.startOperations(for: object, at: indexPath, successCallback: { [weak self] (image: UIImage?) in
 			guard let strongSelf = self else {
 				return
@@ -46,8 +48,6 @@ class NewsElementCell: UITableViewCell {
 			strongSelf.smallImage.contentMode = .scaleAspectFit
 			strongSelf.smallImage.backgroundColor = .white
 		})
-		//setImageToImageView(urlString: object.imageURL!)
-		self.title!.text = object.title!
 	}
 
 

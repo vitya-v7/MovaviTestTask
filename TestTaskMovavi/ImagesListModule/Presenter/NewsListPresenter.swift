@@ -18,11 +18,11 @@ class NewsListPresenter: NewsListViewOutput {
 	var limit = Constants.newsPerPage
 	var listFulfilled = false
 	var firstLoad = true
-
+	var currentMode: NewsElementViewModel.ImageState = .normal
 	init () {}
 
 	func viewDidLoadDone() {
-
+		currentMode = .normal
 		newsViewModels = [ViewModelInterface]()
 		loadNews()
 		view?.setInitialState()
@@ -94,13 +94,7 @@ class NewsListPresenter: NewsListViewOutput {
 				strongSelf.newsViewModels?.append(indicatorModel)
 				
 			}
-
-			DispatchQueue.main.async {
-				if let newsViewModel = strongSelf.newsViewModels {
-					
-					strongSelf.view!.setViewModel(viewModels: newsViewModel)
-				}
-			}
+			strongSelf.changeModeOfAllViewModels(mode: strongSelf.currentMode)
 		}, errorCallback: { (error: Error) in
 
 		})

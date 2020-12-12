@@ -31,7 +31,6 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 		output?.changeModeOfAllViewModels(mode: .normal)
 	}
 
-
 	@IBAction func sepiaModeButton(_ sender: UIBarButtonItem) {
 		output?.changeModeOfAllViewModels(mode: .sepia)
 	}
