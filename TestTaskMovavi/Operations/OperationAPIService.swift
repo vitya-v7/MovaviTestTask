@@ -56,7 +56,7 @@ class OperationImageAPIService {
 
 		pendingOperations.downloadQueue.addOperation(downloader)
 
-		pendingOperations.downloadQueue.waitUntilAllOperationsAreFinished()
+		//pendingOperations.downloadQueue.waitUntilAllOperationsAreFinished()
 
 		if let image = downloader.image {
 			self.image = image
@@ -89,7 +89,7 @@ class OperationImageAPIService {
 		pendingOperations.filtrationsInProgress[indexPath] = filterer
 		pendingOperations.filtrationQueue.addOperation(filterer)
 
-		pendingOperations.filtrationQueue.waitUntilAllOperationsAreFinished()
+		//pendingOperations.filtrationQueue.waitUntilAllOperationsAreFinished()
 
 		successCallback(imageIn)
 	}
