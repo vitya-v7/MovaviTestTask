@@ -31,6 +31,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 		output?.changeModeOfAllViewModels(mode: .normal)
 	}
 
+
 	@IBAction func sepiaModeButton(_ sender: UIBarButtonItem) {
 		output?.changeModeOfAllViewModels(mode: .sepia)
 	}
@@ -39,8 +40,8 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 		output?.changeModeOfAllViewModels(mode: .blackAndWhite)
 	}
 
-
-
+	var operationAPIService: OperationImageAPIService?
+	
 	var output: NewsListViewOutput?
 	var newsViewModels = [ViewModelInterface]()
 	var indicatorCellVisibleForTheFirstTime = true
@@ -89,7 +90,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 
 		if viewModelCellIdentifier == NewsElementCellConstant {
 			let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! NewsElementCell
-			cell.configureCell(withObject: viewModel as! NewsElementViewModel, indexPath: indexPath)
+			cell.configureCell(withObject: viewModel as! NewsElementViewModel, indexPath: indexPath, service: operationAPIService!)
 			return cell
 		} else {
 			let cell = tableView.dequeueReusableCell(withIdentifier: viewModelCellIdentifier) as! IndicatorViewCell
@@ -130,47 +131,44 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 	}
 
 
-	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+/*	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
 		//1
-		suspendAllOperations()
+		pendingOperations.suspendAllOperations()
 	}
 
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		// 2
 		if !decelerate {
-			loadImagesForOnscreenCells()
-			resumeAllOperations()
+		//	loadImagesForOnscreenCells()
+			pendingOperations.resumeAllOperations()
 		}
 	}
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		// 3
-		loadImagesForOnscreenCells()
-		resumeAllOperations()
+	//	loadImagesForOnscreenCells()
+		pendingOperations.resumeAllOperations()
 	}
 
+*/
 
 
 
 
+	/*func loadImagesForOnscreenCells() {
 
-	func loadImagesForOnscreenCells() {
-		//1
 		if let pathsArray = tableView?.indexPathsForVisibleRows {
-			//2
+
 			var allPendingOperations = Set(pendingOperations.downloadsInProgress.keys)
 			allPendingOperations.formUnion(pendingOperations.filtrationsInProgress.keys)
 
-			//3
 			var toBeCancelled = allPendingOperations
 			let visiblePaths = Set(pathsArray)
 			toBeCancelled.subtract(visiblePaths)
 
-			//4
 			var toBeStarted = visiblePaths
 			toBeStarted.subtract(allPendingOperations)
 
-			// 5
 			for indexPath in toBeCancelled {
 				if let pendingDownload = pendingOperations.downloadsInProgress[indexPath] {
 					pendingDownload.cancel()
@@ -182,12 +180,12 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 				pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
 			}
 
-			// 6
 			for indexPath in toBeStarted {
-				let recordToProcess = (newsViewModels as! [NewsElementViewModel])[indexPath.row]
-				startOperations(for: recordToProcess, at: indexPath)
+				let recordForProcess = (newsViewModels as! [NewsElementViewModel])[indexPath.row]
+				let imageURLString = recordForProcess.imageURL
+
+				operationAPIService.startOperations(for: recordForProcess, at: indexPath, successCallback: URL.init(string: imageURLString)!)
 			}
 		}
-	}
-
+	}*/
 }

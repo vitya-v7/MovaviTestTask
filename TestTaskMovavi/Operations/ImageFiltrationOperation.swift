@@ -10,23 +10,25 @@ import Foundation
 import UIKit
 
 class ImageFiltration: Operation {
-
-	var image: UIImage
-	init(_ image: UIImage) {
-		self.image = image
+	
+	let newsViewModel: NewsElementViewModel
+	var image: UIImage?
+	init(_ newsViewModel: NewsElementViewModel) {
+		self.newsViewModel = newsViewModel
 	}
-
 	override func main () {
 		if isCancelled {
 			return
 		}
 
-		/*guard self.photoRecord.state == .downloaded else {
+		guard self.newsViewModel.mode == .normal else {
 			return
-		}*/
+		}
 
-		if let filteredImage = applySepiaFilter(image) {
+		if let image = image,
+		   let filteredImage = applySepiaFilter(image) {
 			self.image = filteredImage
+			self.newsViewModel.mode = .sepia
 		}
 	}
 

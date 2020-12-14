@@ -11,26 +11,26 @@ import UIKit
 
 class ImageDownloader: Operation {
 
-	let imageURL: URL
+	let newsViewModel: NewsElementViewModel
 	var image: UIImage?
-	init(_ imageURL: URL) {
-		self.imageURL = imageURL
+	init(_ newsViewModel: NewsElementViewModel) {
+		self.newsViewModel = newsViewModel
 	}
 
 	override func main() {
 
-
+		if isCancelled {
+			return
+		}
+		var imageData: Data?
+		if let url = URL(string: newsViewModel.imageURL) {
+			imageData = try? Data(contentsOf: url)
+		}
 		if isCancelled {
 			return
 		}
 
-		guard let imageData = try? Data(contentsOf: imageURL) else { return }
-
-		if isCancelled {
-			return
-		}
-
-		if !imageData.isEmpty {
+		if let imageData = imageData, !imageData.isEmpty {
 			image = UIImage(data:imageData)
 		}
 	}

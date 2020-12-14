@@ -12,7 +12,7 @@ class NewsElementCell: UITableViewCell {
 	
 	@IBOutlet weak var smallImage: UIImageView!
 	@IBOutlet weak var title: UILabel!
-	
+	var imageIn: UIImage?
 	var viewModel: NewsElementViewModel?
 	var imageService: OperationImageAPIService?
 	override func awakeFromNib() {
@@ -20,7 +20,7 @@ class NewsElementCell: UITableViewCell {
 
 		// Initialization code
 	}
-
+	var operationAPIService: OperationImageAPIService?
 
 	override func prepareForReuse() {
 		self.smallImage.backgroundColor = UIColor.lightGray
@@ -28,31 +28,45 @@ class NewsElementCell: UITableViewCell {
 	}
 
 
-
-
-
-	func configureCell(withObject object: NewsElementViewModel, indexPath: IndexPath) {
+	func configureCell(withObject object: NewsElementViewModel, indexPath: IndexPath, service: OperationImageAPIService) {
 		viewModel = object
-		guard let stringURL = viewModel!.imageURL else { return }
+		operationAPIService = service
+		guard let stringURL = viewModel?.imageURL else { return }
 		let urlImage = URL.init(string: stringURL)
-		if let urlImage = urlImage {
-			imageService = OperationImageAPIService.init(imageURL: urlImage)
-		}
-		self.title!.text = object.title!
+		operationAPIService!.imageURL = urlImage
+		self.title!.text = object.title
 		//setImageToImageView(urlString: object.imageURL!)
-		imageService?.startOperations(for: object, at: indexPath, successCallback: { [weak self] (image: UIImage?) in
-			guard let strongSelf = self else {
-				return
-			}
-			strongSelf.smallImage.image = image
-			strongSelf.smallImage.contentMode = .scaleAspectFit
-			strongSelf.smallImage.backgroundColor = .white
-		})
+
+
+		if object.mode != .normal {
+			operationAPIService!.startDownload(for: object, at: indexPath, successCallback: { [weak self] (image: UIImage?) in
+				guard let strongSelf = self else {
+					return
+				}
+				DispatchQueue.main.async {
+					strongSelf.smallImage.contentMode = .scaleAspectFit
+					strongSelf.smallImage.backgroundColor = .white
+					strongSelf.smallImage.image = image
+				}
+			})
+		}
+		if object.mode == .sepia {
+			operationAPIService!.startFiltrationSepia(for: object, at: indexPath, successCallback: { [weak self] (image: UIImage?) in
+				guard let strongSelf = self else {
+					return
+				}
+				DispatchQueue.main.async {
+					strongSelf.smallImage.contentMode = .scaleAspectFit
+					strongSelf.smallImage.backgroundColor = .white
+					strongSelf.smallImage.image = image
+				}
+			})
+		}
 	}
 
 
 
-	func setImageToImageView(urlString: String) {
+	/*func setImageToImageView(urlString: String) {
 		ImageLoader.shared.loadImage(from: urlString) { [weak self] (imageData, urlString) in
 			guard let strongSelf = self else {
 				return
@@ -74,5 +88,5 @@ class NewsElementCell: UITableViewCell {
 				print("Error loading image");
 			}
 		}
-	}
+	}*/
 }

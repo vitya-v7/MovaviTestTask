@@ -9,11 +9,11 @@
 import UIKit
 
 class NewsElementViewModel: ViewModelInterface {
-	var title: String?
-	var imageURL: String?
-	var state: ImageState?
+	var title: String
+	var imageURL: String
+	var mode: ImageState
 	enum ImageState {
-		case notDownloaded
+		case none
 		case normal
 		case sepia
 		case blackAndWhite
@@ -21,7 +21,7 @@ class NewsElementViewModel: ViewModelInterface {
 	init (withElementModel model: NewsElementModel) {
 		self.title = model.title
 		self.imageURL = model.url
-		self.state = .normal
+		self.mode = .normal
 	}
 
     func cellIdentifier() -> String {

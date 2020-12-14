@@ -12,17 +12,20 @@ class AbstractFactory {
 	class func createNewsListModule() -> UIViewController {
 		let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
 		let view = storyboard.instantiateViewController(identifier: "NewsListViewIdentifier") as! NewsListView
-		
 		let presenter = NewsListPresenter()
+		let newsAPIService = NewsAPIService()
+		newsAPIService.apiService = APIService.shared
+		presenter.newsAPIService = newsAPIService
+		let operationAPIService = OperationImageAPIService()
+		view.operationAPIService = operationAPIService
+
 		view.output = presenter
 		presenter.view = view
-		
 
+		//let newsAPIService = NewsAPIService.init()
+		//newsAPIService.apiService = APIService.shared
 
-		let newsAPIService = NewsAPIService.init()
-		newsAPIService.apiService = APIService.shared
-
-		presenter.newsAPIService = newsAPIService
+		//presenter.newsAPIService = newsAPIService
 
 		return view
 	}

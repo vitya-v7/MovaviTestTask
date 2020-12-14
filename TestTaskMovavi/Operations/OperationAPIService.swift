@@ -12,21 +12,21 @@ import UIKit
 class OperationImageAPIService {
 
 
-	static let pendingOperations = PendingOperations()
-	let imageURL: URL
+	var pendingOperations = PendingOperations()
+	var imageURL: URL?
 	var image: UIImage?
-	init(imageURL: URL) {
-		self.imageURL = imageURL
+	init() {
+
 	}
 	
 	func startOperations(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
-		switch (photoRecord.state) {
-		case .notDownloaded:
+		switch (photoRecord.mode) {
+		case .none:
 			return
 		case .normal:
 			startDownload(for: photoRecord, at: indexPath, successCallback: successCallback)
 		case .sepia:
-			startFiltration(for: photoRecord, at: indexPath, successCallback: successCallback)
+			startFiltrationSepia(for: photoRecord, at: indexPath, successCallback: successCallback)
 		default:
 			NSLog("do nothing")
 		}
@@ -35,11 +35,11 @@ class OperationImageAPIService {
 
 	func startDownload(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
 
-		guard OperationImageAPIService.pendingOperations.downloadsInProgress[indexPath] == nil else {
+		guard pendingOperations.downloadsInProgress[indexPath] == nil else {
 			return
 		}
 
-		let downloader = ImageDownloader(imageURL)
+		let downloader = ImageDownloader(photoRecord)
 
 		downloader.completionBlock = {
 			if downloader.isCancelled {
@@ -48,15 +48,15 @@ class OperationImageAPIService {
 		}
 
 		DispatchQueue.main.async {
-			OperationImageAPIService.pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
+			self.pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
 			//self.tableView?.reloadRows(at: [indexPath], with: .fade)
 		}
 
-		OperationImageAPIService.pendingOperations.downloadsInProgress[indexPath] = downloader
+		pendingOperations.downloadsInProgress[indexPath] = downloader
 
-		OperationImageAPIService.pendingOperations.downloadQueue.addOperation(downloader)
+		pendingOperations.downloadQueue.addOperation(downloader)
 
-		OperationImageAPIService.pendingOperations.downloadQueue.waitUntilAllOperationsAreFinished()
+		pendingOperations.downloadQueue.waitUntilAllOperationsAreFinished()
 
 		if let image = downloader.image {
 			self.image = image
@@ -69,40 +69,32 @@ class OperationImageAPIService {
 
 
 
-	func startFiltration(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
-		guard OperationImageAPIService.pendingOperations.filtrationsInProgress[indexPath] == nil else {
+	func startFiltrationSepia(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
+		guard pendingOperations.filtrationsInProgress[indexPath] == nil else {
 			return
 		}
 		guard let imageIn = self.image else { return }
-		let filterer = ImageFiltration(imageIn)
+		let filterer = ImageFiltration(photoRecord)
 		filterer.completionBlock = {
 			if filterer.isCancelled {
 				return
 			}
 
 			DispatchQueue.main.async {
-				OperationImageAPIService.pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
+				self.pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
 				//self.tableView?.reloadRows(at: [indexPath], with: .fade
 			}
 		}
 
-		OperationImageAPIService.pendingOperations.filtrationsInProgress[indexPath] = filterer
-		OperationImageAPIService.pendingOperations.filtrationQueue.addOperation(filterer)
+		pendingOperations.filtrationsInProgress[indexPath] = filterer
+		pendingOperations.filtrationQueue.addOperation(filterer)
 
-		OperationImageAPIService.pendingOperations.filtrationQueue.waitUntilAllOperationsAreFinished()
+		pendingOperations.filtrationQueue.waitUntilAllOperationsAreFinished()
 
 		successCallback(imageIn)
 	}
 
 
-	func suspendAllOperations() {
-		OperationImageAPIService.pendingOperations.downloadQueue.isSuspended = true
-		OperationImageAPIService.pendingOperations.filtrationQueue.isSuspended = true
-	}
-
-	func resumeAllOperations() {
-		OperationImageAPIService.pendingOperations.downloadQueue.isSuspended = false
-		OperationImageAPIService.pendingOperations.filtrationQueue.isSuspended = false
-	}
+	
 
 }

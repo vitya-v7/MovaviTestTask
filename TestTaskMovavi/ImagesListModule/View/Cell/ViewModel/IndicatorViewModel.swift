@@ -12,4 +12,5 @@ class IndicatorViewModel: ViewModelInterface {
     func cellIdentifier() -> String {
         return "ActivityCellIdentifier"
     }
+	var mode: NewsElementViewModel.ImageState = .none
 }

@@ -27,4 +27,16 @@ public class PendingOperations {
 		queue.maxConcurrentOperationCount = 1
 		return queue
 	}()
+
+
+	func suspendAllOperations() {
+		downloadQueue.isSuspended = true
+		filtrationQueue.isSuspended = true
+	}
+
+	func resumeAllOperations() {
+		downloadQueue.isSuspended = false
+		filtrationQueue.isSuspended = false
+	}
+	
 }

@@ -97,7 +97,6 @@
 			children = (
 				840029D124E9745F005E8966 /* APIService.swift */,
 				8459CA2D24EBF0DB00D31B9A /* NewsAPIService */,
-				8459CA2C24EBF0BE00D31B9A /* ImageLoader */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -171,6 +170,7 @@
 				84B11A1A24E9A38E0005DA43 /* Models */,
 				842A89422578B08E009A3A74 /* XMLParserNews.swift */,
 				843E95F6257BCD0200D3BE3E /* NewsAPIService.swift */,
+				8459CA2C24EBF0BE00D31B9A /* ImageLoader */,
 			);
 			path = NewsAPIService;
 			sourceTree = "<group>";

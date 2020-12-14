@@ -63,6 +63,8 @@ class NewsListPresenter: NewsListViewOutput {
 		}
 	}
 
+	
+
 	func loadNews() {
 		newsAPIService?.getNews(page: currentPage, limit: limit, successCallback: { [weak self] (data:[NewsElementModel]?) -> ()  in
 			var countLoadedNews = 0
@@ -94,7 +96,9 @@ class NewsListPresenter: NewsListViewOutput {
 				strongSelf.newsViewModels?.append(indicatorModel)
 				
 			}
+			print("privet")
 			strongSelf.changeModeOfAllViewModels(mode: strongSelf.currentMode)
+			
 		}, errorCallback: { (error: Error) in
 
 		})
