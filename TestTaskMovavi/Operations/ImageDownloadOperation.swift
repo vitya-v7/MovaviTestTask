@@ -1,5 +1,5 @@
 //
-//  ImageDownloaderOperation.swift
+//  ImageDownloadOperation.swift
 //  TestTaskMovavi
 //
 //  Created by Admin on 06.12.2020.
@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 
-class ImageDownloader: Operation {
+class ImageDownloadOperation: Operation {
 
-	let newsViewModel: NewsElementViewModel
+	let imagePath: String
 	var image: UIImage?
-	init(_ newsViewModel: NewsElementViewModel) {
-		self.newsViewModel = newsViewModel
+	init(_ imagePath: String) {
+		self.imagePath = imagePath
 	}
 
 	override func main() {
@@ -23,7 +23,7 @@ class ImageDownloader: Operation {
 			return
 		}
 		var imageData: Data?
-		if let url = URL(string: newsViewModel.imageURL) {
+        if let url = URL(string: self.imagePath) {
 			imageData = try? Data(contentsOf: url)
 		}
 		if isCancelled {

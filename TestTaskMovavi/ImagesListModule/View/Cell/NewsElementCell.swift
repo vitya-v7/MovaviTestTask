@@ -18,7 +18,8 @@ class NewsElementCell: UITableViewCell {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 
-		// Initialization code
+        self.smallImage.contentMode = .scaleAspectFit
+        self.smallImage.backgroundColor = .white
 	}
 	var operationAPIService: OperationImageAPIService?
 
@@ -27,7 +28,6 @@ class NewsElementCell: UITableViewCell {
 		self.smallImage.image = nil
 	}
 
-
 	func configureCell(withObject object: NewsElementViewModel, indexPath: IndexPath, service: OperationImageAPIService) {
 		viewModel = object
 		operationAPIService = service
@@ -35,36 +35,25 @@ class NewsElementCell: UITableViewCell {
 		let urlImage = URL.init(string: stringURL)
 		operationAPIService!.imageURL = urlImage
 		self.title!.text = object.title
-		//setImageToImageView(urlString: object.imageURL!)
 
+        operationAPIService!.startDownload(imagePath: object.imageURL,
+                                           indexPath: indexPath,
+                                           filtrationMode:object.mode,
+                                           successCallback: { [weak self] (image: UIImage?, imagePath:String) in
+            guard let strongSelf = self else {
+                return
+            }
 
-		if object.mode != .normal {
-			operationAPIService!.startDownload(for: object, at: indexPath, successCallback: { [weak self] (image: UIImage?) in
-				guard let strongSelf = self else {
-					return
-				}
-				DispatchQueue.main.async {
-					strongSelf.smallImage.contentMode = .scaleAspectFit
-					strongSelf.smallImage.backgroundColor = .white
-					strongSelf.smallImage.image = image
-				}
-			})
-		}
-		if object.mode == .sepia {
-			operationAPIService!.startFiltrationSepia(for: object, at: indexPath, successCallback: { [weak self] (image: UIImage?) in
-				guard let strongSelf = self else {
-					return
-				}
-				DispatchQueue.main.async {
-					strongSelf.smallImage.contentMode = .scaleAspectFit
-					strongSelf.smallImage.backgroundColor = .white
-					strongSelf.smallImage.image = image
-				}
-			})
-		}
+            var loadedImage:UIImage? = image
+            if (self?.viewModel?.imageURL != imagePath) {
+                loadedImage = nil
+            }
+
+            DispatchQueue.main.async {
+                strongSelf.smallImage.image = loadedImage
+            }
+        })
 	}
-
-
 
 	/*func setImageToImageView(urlString: String) {
 		ImageLoader.shared.loadImage(from: urlString) { [weak self] (imageData, urlString) in

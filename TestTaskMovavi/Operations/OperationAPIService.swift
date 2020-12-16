@@ -11,90 +11,84 @@ import UIKit
 
 class OperationImageAPIService {
 
-
 	var pendingOperations = PendingOperations()
 	var imageURL: URL?
-	var image: UIImage?
+
 	init() {
 
 	}
-	
-	func startOperations(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
-		switch (photoRecord.mode) {
-		case .none:
-			return
-		case .normal:
-			startDownload(for: photoRecord, at: indexPath, successCallback: successCallback)
-		case .sepia:
-			startFiltrationSepia(for: photoRecord, at: indexPath, successCallback: successCallback)
-		default:
-			NSLog("do nothing")
-		}
+
+    func download(imagePath: String, indexPath: IndexPath, filtrationMode:ImageState, successCallback: @escaping (_ image:UIImage?, _ imagePath:String)  ->()) -> () {
+        var operation:Operation? = nil
+        if pendingOperations.downloadsInProgress[indexPath] != nil {
+            operation = pendingOperations.downloadsInProgress[indexPath]
+            if !operation!.isCancelled && operation!.isFinished {
+                if operation is ImageDownloadOperation {
+                    successCallback((operation as! ImageDownloadOperation).image, imagePath)
+                    return
+                }
+            }
+        } else {
+            operation = ImageDownloadOperation(imagePath)
+            pendingOperations.downloadQueue.addOperation(operation!)
+            pendingOperations.downloadsInProgress[indexPath] = operation!
+        }
+
+        operation!.completionBlock = {
+            if operation!.isCancelled {
+                return
+            }
+
+            if operation is ImageDownloadOperation {
+                successCallback((operation as! ImageDownloadOperation).image, imagePath)
+                return
+            }
+        }
+    }
+
+	func startDownload(imagePath: String, indexPath: IndexPath, filtrationMode:ImageState, successCallback: @escaping (_ image:UIImage?, _ imagePath:String)  ->()) -> () {
+
+        switch (filtrationMode) {
+        case .normal:
+            download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode, successCallback:successCallback)
+        case .sepia:
+            download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode) { [weak self] image, imagePath  in
+                self?.startFiltrationSepia(image:image, indexPath:indexPath) { filteredImage in
+                     successCallback(filteredImage, imagePath)
+                }}
+        default:
+            NSLog("do nothing")
+        }
 	}
 
+    func startFiltrationSepia(image:UIImage?, indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
 
-	func startDownload(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
+		guard let imageIn = image else { return }
 
-		guard pendingOperations.downloadsInProgress[indexPath] == nil else {
-			return
-		}
+        var operation:Operation? = nil
+        if pendingOperations.filtrationsInProgress[indexPath] != nil {
+            operation = pendingOperations.filtrationsInProgress[indexPath]
+            if !operation!.isCancelled && operation!.isFinished {
+                if operation is ImageFiltration {
+                    successCallback((operation as! ImageFiltration).image)
+                    return
+                }
+            }
+        } else {
+            operation = ImageFiltration(imageIn)
+            pendingOperations.filtrationQueue.addOperation(operation!)
+            pendingOperations.filtrationsInProgress[indexPath] = operation!
+        }
 
-		let downloader = ImageDownloader(photoRecord)
+        operation!.completionBlock = {
+            if operation!.isCancelled {
+                return
+            }
 
-		downloader.completionBlock = {
-			if downloader.isCancelled {
-				return
-			}
-		}
-
-		DispatchQueue.main.async {
-			self.pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
-			//self.tableView?.reloadRows(at: [indexPath], with: .fade)
-		}
-
-		pendingOperations.downloadsInProgress[indexPath] = downloader
-
-		pendingOperations.downloadQueue.addOperation(downloader)
-
-		//pendingOperations.downloadQueue.waitUntilAllOperationsAreFinished()
-
-		if let image = downloader.image {
-			self.image = image
-			successCallback(image)
-		}
-		else {
-			assertionFailure("Image didn't load")
-		}
+            if operation is ImageFiltration {
+                successCallback((operation as! ImageFiltration).image)
+                return
+            }
+        }
 	}
-
-
-
-	func startFiltrationSepia(for photoRecord: NewsElementViewModel, at indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
-		guard pendingOperations.filtrationsInProgress[indexPath] == nil else {
-			return
-		}
-		guard let imageIn = self.image else { return }
-		let filterer = ImageFiltration(photoRecord)
-		filterer.completionBlock = {
-			if filterer.isCancelled {
-				return
-			}
-
-			DispatchQueue.main.async {
-				self.pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
-				//self.tableView?.reloadRows(at: [indexPath], with: .fade
-			}
-		}
-
-		pendingOperations.filtrationsInProgress[indexPath] = filterer
-		pendingOperations.filtrationQueue.addOperation(filterer)
-
-		//pendingOperations.filtrationQueue.waitUntilAllOperationsAreFinished()
-
-		successCallback(imageIn)
-	}
-
-
-	
-
 }

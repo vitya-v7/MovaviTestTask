@@ -8,16 +8,19 @@
 
 import UIKit
 
-class NewsElementViewModel: ViewModelInterface {
+enum ImageState {
+    case none
+    case normal
+    case sepia
+    case blackAndWhite
+}
+
+class NewsElementViewModel: ViewModelInterface, ImageViewModelInterface {
+    
 	var title: String
 	var imageURL: String
 	var mode: ImageState
-	enum ImageState {
-		case none
-		case normal
-		case sepia
-		case blackAndWhite
-	}
+
 	init (withElementModel model: NewsElementModel) {
 		self.title = model.title
 		self.imageURL = model.url

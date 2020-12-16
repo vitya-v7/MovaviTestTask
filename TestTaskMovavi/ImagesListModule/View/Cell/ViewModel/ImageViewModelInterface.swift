@@ -1,5 +1,5 @@
 //
-//  ViewModelInterface.swift
+//  ImageViewModelInterface.swift
 //  TestTaskMovavi
 //
 //  Created by Admin on 04.12.2020.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol ViewModelInterface {
-    func cellIdentifier() -> String
+protocol ImageViewModelInterface {
+    var mode: ImageState { get set }
 }

@@ -18,7 +18,7 @@ protocol NewsListViewOutput {
 	func viewDidLoadDone()
 	func loadNews()
 	func nextPageIndicatorShowed()
-	func changeModeOfAllViewModels(mode: NewsElementViewModel.ImageState)
+	func changeModeOfAllViewModels(mode: ImageState)
 }
 
 class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UIScrollViewDelegate{
