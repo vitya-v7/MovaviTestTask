@@ -9,8 +9,7 @@
 import UIKit
 
 class NewsListPresenter: NewsListViewOutput {
-
-
+	
 	var newsAPIService: NewsAPIService?
 	var view: NewsListViewInput?
 	var newsViewModels: [ViewModelInterface]?
@@ -29,6 +28,8 @@ class NewsListPresenter: NewsListViewOutput {
 	}
 
 	func changeModeOfAllViewModels(mode: ImageState) {
+		currentMode = mode
+
 		if self.newsViewModels != nil {
 			for i in 0 ..< self.newsViewModels!.count {
                 if newsViewModels![i] is ImageViewModelInterface {
@@ -67,7 +68,6 @@ class NewsListPresenter: NewsListViewOutput {
 		}
 	}
 
-	
 
 	func loadNews() {
 		newsAPIService?.getNews(page: currentPage, limit: limit, successCallback: { [weak self] (data:[NewsElementModel]?) -> ()  in
@@ -85,6 +85,7 @@ class NewsListPresenter: NewsListViewOutput {
 				for model in dataIn {
 					let viewModel = NewsElementViewModel.init(withElementModel: model)
 					countLoadedNews = countLoadedNews + 1
+					viewModel.mode = strongSelf.currentMode
 					strongSelf.newsViewModels?.append(viewModel)
 				}
 			}
@@ -107,5 +108,10 @@ class NewsListPresenter: NewsListViewOutput {
             // show error
 		})
     }
+
+	func getCurrentMode() -> ImageState {
+		return currentMode
+	}
 }
+
 

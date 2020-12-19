@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina3_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -22,7 +22,7 @@
                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="lyg-6W-xkr">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="435"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="NewsElementCellIdentifier" rowHeight="200" id="CiN-Ka-Td6" customClass="NewsElementCell" customModule="TestTaskMovavi" customModuleProvider="target">
@@ -116,7 +116,7 @@
                             <constraint firstItem="8rr-lO-yGb" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="Iv0-w3-3Mz"/>
                             <constraint firstItem="Al4-m4-VPT" firstAttribute="trailing" secondItem="8rr-lO-yGb" secondAttribute="trailing" id="Qm9-rF-xCR"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="leading" secondItem="Al4-m4-VPT" secondAttribute="leading" id="XD2-4p-mUQ"/>
-                            <constraint firstItem="8rr-lO-yGb" firstAttribute="bottom" secondItem="lyg-6W-xkr" secondAttribute="bottom" id="bO6-37-bwE"/>
+                            <constraint firstItem="8rr-lO-yGb" firstAttribute="top" secondItem="lyg-6W-xkr" secondAttribute="bottom" constant="1" id="eJg-gz-QIq"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="centerX" secondItem="Al4-m4-VPT" secondAttribute="centerX" id="nET-yG-c50"/>
                             <constraint firstItem="lyg-6W-xkr" firstAttribute="top" secondItem="Al4-m4-VPT" secondAttribute="top" id="pwn-Kx-F0w"/>
                             <constraint firstItem="qml-m5-C3g" firstAttribute="centerY" secondItem="Al4-m4-VPT" secondAttribute="centerY" id="xJj-Gr-J89"/>

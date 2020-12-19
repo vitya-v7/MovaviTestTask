@@ -21,6 +21,7 @@ class NewsElementCell: UITableViewCell {
         self.smallImage.contentMode = .scaleAspectFit
         self.smallImage.backgroundColor = .white
 	}
+	
 	var operationAPIService: OperationImageAPIService?
 
 	override func prepareForReuse() {
