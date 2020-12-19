@@ -18,82 +18,110 @@ class OperationImageAPIService {
 
 	}
 
-    func download(imagePath: String, indexPath: IndexPath, filtrationMode:ImageState, successCallback: @escaping (_ image:UIImage?, _ imagePath:String)  ->()) -> () {
-        var operation:Operation? = nil
-        if pendingOperations.downloadsInProgress[indexPath] != nil {
-            operation = pendingOperations.downloadsInProgress[indexPath]
-            if !operation!.isCancelled && operation!.isFinished {
-                if operation is ImageDownloadOperation {
-                    successCallback((operation as! ImageDownloadOperation).image, imagePath)
-                    return
-                }
-            }
-        } else {
-            operation = ImageDownloadOperation(imagePath)
-            pendingOperations.downloadQueue.addOperation(operation!)
-            pendingOperations.downloadsInProgress[indexPath] = operation!
-        }
+	func download(imagePath: String, indexPath: IndexPath, filtrationMode:ImageState, successCallback: @escaping (_ image:UIImage?, _ imagePath:String)  ->()) -> () {
+		var operation:Operation? = nil
+		if pendingOperations.downloadsInProgress[indexPath] != nil {
+			operation = pendingOperations.downloadsInProgress[indexPath]
+			if !operation!.isCancelled && operation!.isFinished {
+				if operation is ImageDownloadOperation {
+					successCallback((operation as! ImageDownloadOperation).image, imagePath)
+					return
+				}
+			}
+		} else {
+			operation = ImageDownloadOperation(imagePath)
+			pendingOperations.downloadQueue.addOperation(operation!)
+			pendingOperations.downloadsInProgress[indexPath] = operation!
+		}
 
-        operation!.completionBlock = {
-            if operation!.isCancelled {
-                return
-            }
+		operation!.completionBlock = {
+			if operation!.isCancelled {
+				return
+			}
 
-            if operation is ImageDownloadOperation {
-                successCallback((operation as! ImageDownloadOperation).image, imagePath)
-                return
-            }
-        }
-    }
-
+			if operation is ImageDownloadOperation {
+				successCallback((operation as! ImageDownloadOperation).image, imagePath)
+				return
+			}
+		}
+	}
+	var previousMode: ImageState = .normal
 	func startDownload(imagePath: String, indexPath: IndexPath, filtrationMode:ImageState, successCallback: @escaping (_ image:UIImage?, _ imagePath:String)  ->()) -> () {
 
-        switch (filtrationMode) {
-        case .normal:
-            download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode, successCallback:successCallback)
-        case .sepia:
-            download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode) { [weak self] image, imagePath  in
+		switch (filtrationMode) {
+		case .normal:
+			download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode, successCallback:successCallback)
+		case .sepia:
+			download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode) { [weak self] image, imagePath  in
 				self?.startFiltration(image:image, indexPath:indexPath, mode: filtrationMode) { filteredImage in
-                     successCallback(filteredImage, imagePath)
-                }}
+					successCallback(filteredImage, imagePath)
+				}}
 		case .blackAndWhite:
 			download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode) { [weak self] image, imagePath  in
 				self?.startFiltration(image:image, indexPath:indexPath, mode: filtrationMode) { filteredImage in
-					 successCallback(filteredImage, imagePath)
+					successCallback(filteredImage, imagePath)
 				}}
-        default:
-            NSLog("do nothing")
-        }
+		default:
+			NSLog("do nothing")
+		}
+		previousMode = filtrationMode
 	}
 
 	func startFiltration(image:UIImage?, indexPath: IndexPath, mode:ImageState, successCallback: @escaping (UIImage?)  ->()) -> () {
 
 		guard let imageIn = image else { return }
 
-        var operation:Operation? = nil
-        if pendingOperations.filtrationsInProgress[indexPath] != nil {
-            operation = pendingOperations.filtrationsInProgress[indexPath]
-            if !operation!.isCancelled && operation!.isFinished {
-                if operation is ImageFiltration {
-                    successCallback((operation as! ImageFiltration).image)
-                    return
-                }
-            }
-        } else {
-			operation = ImageFiltration(imageIn, mode: mode)
-            pendingOperations.filtrationQueue.addOperation(operation!)
-            pendingOperations.filtrationsInProgress[indexPath] = operation!
-        }
+		var operation:Operation? = nil
+		
+		if previousMode == .sepia && mode == .blackAndWhite  {
+			pendingOperations.filtrationQueueSepia.cancelAllOperations()
+		}
+		if previousMode == .blackAndWhite && mode == .sepia  {
+			pendingOperations.filtrationQueueBW.cancelAllOperations()
+		}
+		if mode == .blackAndWhite {
+			if pendingOperations.filtrationsInProgressBW[indexPath] != nil {
+				operation = pendingOperations.filtrationsInProgressBW[indexPath]
+				if !operation!.isCancelled && operation!.isFinished {
+					if operation is ImageFiltration {
+						successCallback((operation as! ImageFiltration).image)
+						return
+					}
+				}
+			} else {
+				operation = ImageFiltration(imageIn, mode: mode)
+				pendingOperations.filtrationQueueBW.addOperation(operation!)
+				pendingOperations.filtrationsInProgressBW[indexPath] = operation!
+			}
+		}
 
-        operation!.completionBlock = {
-            if operation!.isCancelled {
-                return
-            }
+		if mode == .sepia {
+			pendingOperations.filtrationQueueBW.cancelAllOperations()
+			if pendingOperations.filtrationsInProgressSepia[indexPath] != nil {
+				operation = pendingOperations.filtrationsInProgressSepia[indexPath]
+				if !operation!.isCancelled && operation!.isFinished {
+					if operation is ImageFiltration {
+						successCallback((operation as! ImageFiltration).image)
+						return
+					}
+				}
+			} else {
+				operation = ImageFiltration(imageIn, mode: mode)
+				pendingOperations.filtrationQueueSepia.addOperation(operation!)
+				pendingOperations.filtrationsInProgressSepia[indexPath] = operation!
+			}
+		}
 
-            if operation is ImageFiltration {
-                successCallback((operation as! ImageFiltration).image)
-                return
-            }
-        }
+		operation!.completionBlock = {
+			if operation!.isCancelled {
+				return
+			}
+
+			if operation is ImageFiltration {
+				successCallback((operation as! ImageFiltration).image)
+				return
+			}
+		}
 	}
+
 }

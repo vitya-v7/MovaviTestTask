@@ -20,10 +20,18 @@ public class PendingOperations {
 		return queue
 	}()
 
-	lazy var filtrationsInProgress: [IndexPath: Operation] = [:]
-	lazy var filtrationQueue: OperationQueue = {
+	lazy var filtrationsInProgressSepia: [IndexPath: Operation] = [:]
+	lazy var filtrationQueueSepia: OperationQueue = {
 		var queue = OperationQueue()
-		queue.name = "Image Filtration queue"
+		queue.name = "Image Sepia queue"
+		queue.maxConcurrentOperationCount = 6
+		return queue
+	}()
+
+	lazy var filtrationsInProgressBW: [IndexPath: Operation] = [:]
+	lazy var filtrationQueueBW: OperationQueue = {
+		var queue = OperationQueue()
+		queue.name = "Image BW queue"
 		queue.maxConcurrentOperationCount = 6
 		return queue
 	}()
@@ -31,12 +39,12 @@ public class PendingOperations {
 
 	func suspendAllOperations() {
 		downloadQueue.isSuspended = true
-		filtrationQueue.isSuspended = true
+		filtrationQueueSepia.isSuspended = true
 	}
 
 	func resumeAllOperations() {
 		downloadQueue.isSuspended = false
-		filtrationQueue.isSuspended = false
+		filtrationQueueSepia.isSuspended = false
 	}
 	
 }

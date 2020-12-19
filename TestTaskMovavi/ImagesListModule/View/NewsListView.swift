@@ -30,15 +30,18 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 
 	@IBAction func originalModeButton(_ sender: UIBarButtonItem) {
 		output?.changeModeOfAllViewModels(mode: .normal)
+		tableView?.reloadData()
 	}
 
 
 	@IBAction func sepiaModeButton(_ sender: UIBarButtonItem) {
 		output?.changeModeOfAllViewModels(mode: .sepia)
+		tableView?.reloadData()
 	}
 
 	@IBAction func blackWhiteModeButton(_ sender: Any) {
 		output?.changeModeOfAllViewModels(mode: .blackAndWhite)
+		tableView?.reloadData()
 	}
 
 	var operationAPIService: OperationImageAPIService?
@@ -161,7 +164,7 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 		if let pathsArray = tableView?.indexPathsForVisibleRows {
 
 			var allPendingOperations = Set(pendingOperations.downloadsInProgress.keys)
-			allPendingOperations.formUnion(pendingOperations.filtrationsInProgress.keys)
+			allPendingOperations.formUnion(pendingOperations.filtrationsInProgressSepia.keys)
 
 			var toBeCancelled = allPendingOperations
 			let visiblePaths = Set(pathsArray)
@@ -175,10 +178,10 @@ class NewsListView: UIViewController, NewsListViewInput, UITableViewDelegate, UI
 					pendingDownload.cancel()
 				}
 				pendingOperations.downloadsInProgress.removeValue(forKey: indexPath)
-				if let pendingFiltration = pendingOperations.filtrationsInProgress[indexPath] {
+				if let pendingFiltration = pendingOperations.filtrationsInProgressSepia[indexPath] {
 					pendingFiltration.cancel()
 				}
-				pendingOperations.filtrationsInProgress.removeValue(forKey: indexPath)
+				pendingOperations.filtrationsInProgressSepia.removeValue(forKey: indexPath)
 			}
 
 			for indexPath in toBeStarted {
