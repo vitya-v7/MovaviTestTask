@@ -32,13 +32,13 @@ class NewsListPresenter: NewsListViewOutput {
 
 		if self.newsViewModels != nil {
 			for i in 0 ..< self.newsViewModels!.count {
-                if newsViewModels![i] is ImageViewModelInterface {
-                    var viewModel:ImageViewModelInterface = newsViewModels![i] as! ImageViewModelInterface
-                    viewModel.mode = mode
-                }
+				if newsViewModels![i] is ImageViewModelInterface {
+					var viewModel:ImageViewModelInterface = newsViewModels![i] as! ImageViewModelInterface
+					viewModel.mode = mode
+				}
 			}
 		}
-        
+
 		DispatchQueue.main.async { [weak self] in
 			guard let strongSelf = self else {
 				return
@@ -67,7 +67,6 @@ class NewsListPresenter: NewsListViewOutput {
 			}
 		}
 	}
-
 
 	func loadNews() {
 		newsAPIService?.getNews(page: currentPage, limit: limit, successCallback: { [weak self] (data:[NewsElementModel]?) -> ()  in
@@ -105,9 +104,9 @@ class NewsListPresenter: NewsListViewOutput {
 			strongSelf.changeModeOfAllViewModels(mode: strongSelf.currentMode)
 			
 		}, errorCallback: { (error: Error) in
-            // show error
+			print(error.localizedDescription)
 		})
-    }
+	}
 
 	func getCurrentMode() -> ImageState {
 		return currentMode

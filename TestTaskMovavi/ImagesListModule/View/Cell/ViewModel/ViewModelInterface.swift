@@ -9,5 +9,5 @@
 import Foundation
 
 protocol ViewModelInterface {
-    func cellIdentifier() -> String
+	func cellIdentifier() -> String
 }

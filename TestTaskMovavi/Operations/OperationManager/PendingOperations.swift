@@ -36,7 +36,6 @@ public class PendingOperations {
 		return queue
 	}()
 
-
 	func suspendAllOperations() {
 		downloadQueue.isSuspended = true
 		filtrationQueueSepia.isSuspended = true
@@ -46,5 +45,4 @@ public class PendingOperations {
 		downloadQueue.isSuspended = false
 		filtrationQueueSepia.isSuspended = false
 	}
-	
 }

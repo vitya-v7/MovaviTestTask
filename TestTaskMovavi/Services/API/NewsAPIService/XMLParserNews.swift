@@ -45,7 +45,6 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 
 		let xmlParser = XMLParser.init(data: data)
 		xmlParser.delegate = self
-
 		xmlParser.parse()
 
 		return posts
@@ -96,8 +95,8 @@ class XMLParserNews: NSObject, XMLParserDelegate {
 	}
 
 	private func parser(parser: XMLParser, parseErrorOccurred parseError: NSError) {
-			NSLog("failure error: %@", parseError)
-		}
+		NSLog("failure error: %@", parseError)
+	}
 
 	func parserDidEndDocument(_ parser: XMLParser) {
 

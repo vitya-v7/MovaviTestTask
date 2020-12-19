@@ -23,8 +23,6 @@ class APIService {
 	
 	func getRequest(path: String, successCallback: @escaping (Data?)  ->(), errorCallback: @escaping (Error)->()) -> () {
 		let urlSession = URLSession.shared
-		//let inParameters = addAPIKey(parameters: parameters)
-		//let parametersString = createQueryParametersString(parameters: inParameters)
 		
 		if let url = URL(string: host) {
 			var urlRequest = URLRequest.init(url: url)

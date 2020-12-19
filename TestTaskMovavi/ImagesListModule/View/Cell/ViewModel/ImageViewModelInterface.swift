@@ -9,5 +9,5 @@
 import Foundation
 
 protocol ImageViewModelInterface {
-    var mode: ImageState { get set }
+	var mode: ImageState { get set }
 }

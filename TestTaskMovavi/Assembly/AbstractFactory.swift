@@ -18,15 +18,8 @@ class AbstractFactory {
 		presenter.newsAPIService = newsAPIService
 		let operationAPIService = OperationImageAPIService()
 		view.operationAPIService = operationAPIService
-
 		view.output = presenter
 		presenter.view = view
-
-		//let newsAPIService = NewsAPIService.init()
-		//newsAPIService.apiService = APIService.shared
-
-		//presenter.newsAPIService = newsAPIService
-
 		return view
 	}
 }
