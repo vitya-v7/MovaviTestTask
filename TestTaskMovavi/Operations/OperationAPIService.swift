@@ -53,15 +53,20 @@ class OperationImageAPIService {
             download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode, successCallback:successCallback)
         case .sepia:
             download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode) { [weak self] image, imagePath  in
-                self?.startFiltrationSepia(image:image, indexPath:indexPath) { filteredImage in
+				self?.startFiltration(image:image, indexPath:indexPath, mode: filtrationMode) { filteredImage in
                      successCallback(filteredImage, imagePath)
                 }}
+		case .blackAndWhite:
+			download(imagePath:imagePath, indexPath:indexPath, filtrationMode:filtrationMode) { [weak self] image, imagePath  in
+				self?.startFiltration(image:image, indexPath:indexPath, mode: filtrationMode) { filteredImage in
+					 successCallback(filteredImage, imagePath)
+				}}
         default:
             NSLog("do nothing")
         }
 	}
 
-    func startFiltrationSepia(image:UIImage?, indexPath: IndexPath, successCallback: @escaping (UIImage?)  ->()) -> () {
+	func startFiltration(image:UIImage?, indexPath: IndexPath, mode:ImageState, successCallback: @escaping (UIImage?)  ->()) -> () {
 
 		guard let imageIn = image else { return }
 
@@ -75,7 +80,7 @@ class OperationImageAPIService {
                 }
             }
         } else {
-            operation = ImageFiltration(imageIn)
+			operation = ImageFiltration(imageIn, mode: mode)
             pendingOperations.filtrationQueue.addOperation(operation!)
             pendingOperations.filtrationsInProgress[indexPath] = operation!
         }

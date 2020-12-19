@@ -13,9 +13,10 @@ class ImageFiltration: Operation {
 
     let originalImage:UIImage!
 	var image: UIImage?
-
-	init(_ image: UIImage) {
+	var mode: ImageState?
+	init(_ image: UIImage, mode: ImageState) {
 		self.originalImage = image
+		self.mode = mode
 	}
 
 	override func main () {
@@ -23,8 +24,15 @@ class ImageFiltration: Operation {
 			return
 		}
 
-        let filteredImage = applyBlackWhiteFilter(originalImage)
-        self.image = filteredImage
+		if self.mode == .sepia {
+			let filteredImage = applySepiaFilter(originalImage)
+			self.image = filteredImage
+		}
+		if self.mode == .blackAndWhite {
+			let filteredImage = applyBlackWhiteFilter(originalImage)
+			self.image = filteredImage
+		}
+
     }
 
     func applyBlackWhiteFilter(_ image:UIImage) -> UIImage? {
@@ -62,7 +70,7 @@ class ImageFiltration: Operation {
 
             guard let filter = CIFilter(name: "CISepiaTone") else { return nil }
             filter.setValue(inputImage, forKey: kCIInputImageKey)
-            filter.setValue(0.8, forKey: "inputIntensity")
+			filter.setValue(0.8, forKey: "inputIntensity")
 
             if isCancelled {
                 return nil
