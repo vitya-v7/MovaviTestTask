@@ -1,9 +1,9 @@
 //
-//  ImagesOperations.swift
+//  PendingOperations.swift
 //  TestTaskMovavi
 //
 //  Created by Admin. on 06.12.2020.
-//  Copyright © 2020 Admin.. All rights reserved.
+//  Copyright © 2020 Admin. All rights reserved.
 //
 
 
